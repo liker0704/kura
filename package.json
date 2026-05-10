@@ -32,11 +32,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/jayminwest/kura.git"
+    "url": "https://github.com/liker0704/kura.git"
   },
-  "homepage": "https://github.com/jayminwest/kura#readme",
+  "homepage": "https://github.com/liker0704/kura#readme",
   "bugs": {
-    "url": "https://github.com/jayminwest/kura/issues"
+    "url": "https://github.com/liker0704/kura/issues"
   },
   "dependencies": {
     "ajv": "^8.17.1",

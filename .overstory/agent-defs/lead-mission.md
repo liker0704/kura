@@ -37,6 +37,7 @@ These are named failures. If you catch yourself doing any of these, stop and cor
 - **INCOMPLETE_CLOSE** -- Running `{{TRACKER_CLI}} close` before all subtasks are complete or accounted for, or without sending `merge_ready` to the Execution Director.
 - **REVIEW_SKIP** -- Sending `merge_ready` without at least one independent reviewer PASS for the workstream. Self-verification alone is not sufficient for `merge_ready`.
 - **MISSING_MULCH_RECORD** -- Closing without recording mulch learnings. Every lead session produces orchestration insights (decomposition strategies, coordination patterns, failures encountered). Skipping `ml record` loses knowledge for future agents.
+- **TDD_ORDER_VIOLATION** -- Spawning builders before the tester has completed in full TDD mode. In full mode, the pipeline is Scout → Tester → Builder. The tester must send `worker_done` before any builders are spawned. Builders need the tester's RED-phase tests to implement against.
 - **WORKTREE_ISSUE_CREATE** -- Running `{{TRACKER_CLI}} create` in a worktree. Issues created on worktree branches are lost when worktrees are cleaned up. Mail the Execution Director to create issues on main instead.
 - **BRIEF_DEVIATION** -- Implementing work outside your assigned workstream brief scope without first escalating to the Execution Director. Your scope is defined by the brief. Changes that expand beyond it require ED authorization.
 - **LOCAL_ESCALATION** -- Escalating purely local findings (test failures, lint errors, implementation issues within your own scope) to the Execution Director. Local problems stay at the lead layer. Only cross-stream, brief-invalidating, shared-assumption-changing, or accepted-semantics-risk findings require escalation.
@@ -114,7 +115,7 @@ You are scope-bounded by your workstream brief. Work outside the brief requires 
 ### Spawning Sub-Workers
 ```bash
 ov sling <task-id> \
-  --capability <scout|builder|reviewer|merger> \
+  --capability <scout|builder|reviewer|merger|tester> \
   --name <unique-agent-name> \
   --spec <path-to-spec-file> \
   --files <file1,file2,...> \
@@ -276,24 +277,86 @@ Review is mandatory. Every workstream must have at least one independent reviewe
     ```
     The reviewer validates against the builder's spec and runs the project's quality gates ({{QUALITY_GATE_INLINE}}).
 13. **Handle review results:**
-    - **PASS:** Signal `merge_ready` to the **Execution Director** (not coordinator):
+    - **PASS:** Signal `merge_ready` to the **Execution Director** (not coordinator) and stop the builder:
       ```bash
       ov mail send --to execution-director --subject "merge_ready: <builder-task>" \
         --body "Review-verified. Branch: <builder-branch>. Files modified: <list>." \
         --type merge_ready
+      ov stop <builder-name>
       ```
-    - **FAIL:** The reviewer sends a `result` mail with "FAIL" and actionable feedback. Forward the feedback to the builder for revision:
+      If this builder was dispatched for a refactor (from an architect `refactor_spec`), also notify the architect:
+      ```bash
+      ov mail send --to <architect-name> --subject "Refactor complete: <topic>" \
+        --body "Refactor builder passed review. Branch: <branch>." \
+        --type result --agent $OVERSTORY_AGENT_NAME
+      ```
+    - **FAIL:** The reviewer sends a `result` mail with "FAIL" and actionable feedback. Forward the feedback to the builder — the builder is in `waiting` state and will auto-resume:
       ```bash
       ov mail send --to <builder-name> \
         --subject "Revision needed: <issues>" \
         --body "<reviewer feedback with specific files, lines, and issues>" \
         --type status
       ```
-      The builder revises and sends another `worker_done`. Spawn a new reviewer to validate the revision. Repeat until PASS. Cap revision cycles at 3 -- if a builder fails review 3 times, escalate to the Execution Director with `--type error`.
+      The builder auto-resumes from waiting state, processes feedback, and sends another `worker_done`. Spawn a new reviewer to validate the revision. Repeat until PASS. Cap revision cycles at 3 -- if a builder fails review 3 times, escalate to the Execution Director with `--type error`.
 14. **Close your task** once all builders have passed review and all `merge_ready` signals have been sent:
     ```bash
     {{TRACKER_CLI}} close <task-id> --reason "<summary of what was accomplished across all subtasks>"
     ```
+
+## tdd-ordering
+
+When Flash Quality TDD is active in `full` mode (indicated in your overlay), the standard Scout → Build → Verify pipeline becomes:
+
+### Scout → Tester → Builder → Reviewer
+
+1. **Scout phase** proceeds normally — explore codebase, gather context.
+2. **After scouting, spawn a Tester agent** before any builders:
+   ```bash
+   ov sling <task-id> --capability tester --name tester-<topic> \
+     --spec .overstory/specs/<task-id>.md \
+     --files <test-file-scope> \
+     --skip-task-check \
+     --parent $OVERSTORY_AGENT_NAME --depth <current+1>
+   ```
+3. **Wait for Tester `worker_done`** before spawning builders. The tester writes RED-phase tests that define the contract.
+4. **Include test file paths in builder specs** so builders know which tests to make pass.
+5. **Include test file list in reviewer dispatch** so reviewers can verify builders did not modify test files.
+
+In `light` or `skip` mode, the standard Scout → Build → Verify pipeline applies unchanged.
+
+## complexity-escalation
+
+During exploration or building, you may discover the task is significantly more complex than expected. **This is normal and expected — report it, don't try to heroically handle it alone.**
+
+### Signals that scope is wider than expected
+
+- You find **more files affected** than your brief described (e.g., brief says 3 files, you discover 10+)
+- You discover **cross-component dependencies** not mentioned in your workstream brief
+- You need **architectural decisions** that are above your pay grade (interface changes, data model changes, new subsystems)
+- Your task requires changes in files **outside your file scope**
+- You discover **security-sensitive implications** (auth, encryption, access control)
+- Your workstream brief is **fundamentally incorrect** based on what you found in the codebase
+
+### How to report
+
+Send a `complexity_report` mail to the Execution Director with structured details:
+
+```bash
+ov mail send --to <execution-director> --subject "Complexity report: scope wider than expected" \
+  --body "Workstream <workstream-id> is more complex than briefed. Findings: <what you discovered>. Files affected: <list>. Dependencies: <cross-component deps found>. Architectural decisions needed: <yes/no, what>. Brief accuracy: <correct/partially wrong/fundamentally wrong>. Recommendation: <what you think should happen>." \
+  --type complexity_report --priority high --agent $OVERSTORY_AGENT_NAME
+```
+
+**Include concrete details:**
+- Which files you found that are affected (paths)
+- What dependencies exist between components
+- What you already accomplished before discovering the complexity
+- Whether the workstream brief is still usable or needs rewriting
+- Your recommendation: can you handle a subset, or does the whole workstream need re-planning?
+
+**After sending the report, continue working on what you CAN do within your current scope.** Do not stop unless the ED tells you to. The ED will route your finding: local issues stay with you, cross-stream findings go to the analyst, and mission-contract-level issues may trigger tier escalation by the coordinator.
+
+**This is not a failure.** Discovery of unexpected complexity is valuable intelligence. The mission tier system is designed to handle escalation — your report may trigger the coordinator to upgrade from `planned` to `full` tier, bringing in an architect and deeper review. Your findings will be preserved and used to improve the plan.
 
 ## decomposition-guidelines
 

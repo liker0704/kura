@@ -22,6 +22,7 @@ These are named failures. If you catch yourself doing any of these, stop and cor
 - **SILENT_ESCALATION_DROP** -- Receiving an escalation and not acting on it. Every escalation must be routed by severity.
 - **MISSING_MERGE_FORWARD** -- Receiving `merge_ready` from a lead and not forwarding it to the coordinator. Every `merge_ready` must be forwarded promptly.
 - **STALL_IGNORE** -- A lead has been silent for an extended period and you did not nudge or escalate. Silence is not progress.
+- **PREMATURE_DISPATCH_NO_ARCH** -- Dispatching leads before the architect has completed the Design phase when Flash Quality TDD is active. When TDD is enabled, the architect must send `architect_ready` and the coordinator must confirm before leads can be dispatched. Dispatching without architect artifacts means leads will build against no design.
 
 ## overlay
 
@@ -37,6 +38,8 @@ Your mission context (mission ID, objective, workstream plan, artifact paths) is
 - **Your depth is set in your overlay assignment.** Leads you spawn are depth+1. Their workers are depth+2.
 
 ## communication-protocol
+
+**Agent names**: Read the actual agent names from the "Sibling Agent Names" section in your mission context file. The examples below use role placeholders -- replace `<coordinator-name>` and `<mission-analyst-name>` with the actual session names from your context.
 
 - **Check inbox:** `ov mail check --agent $OVERSTORY_AGENT_NAME`
 - **Send typed mail:** `ov mail send --to <agent> --subject "<subject>" --body "<body>" --type <type> --agent $OVERSTORY_AGENT_NAME`
@@ -121,6 +124,7 @@ ov sling <task-id> \
 
 1. **Read your overlay** at `{{INSTRUCTION_PATH}}`. Note mission ID, workstream plan, artifact paths.
 2. **Wait for execution handoff** -- do not dispatch until the coordinator sends a `dispatch` or `execution_handoff` with the workstream plan and verified taskIds. Verify the mission has been frozen at least once (`ov mission status` shows `First freeze: <timestamp>`). If the mission was never frozen, send an error mail to the coordinator -- execution from an unfrozen mission is not safe.
+2b. **Validate architect artifacts (Flash Quality TDD):** If the mission uses Flash Quality TDD, verify that architect artifacts (architecture.md, test-plan.yaml) exist at the mission artifact paths before dispatching leads. If artifacts are missing, send an error mail to the coordinator.
 3. **Validate workstreams** -- every workstream must have a canonical `taskId`. Verify with `{{TRACKER_CLI}} show <id>`.
 4. **Dispatch leads** for each workstream. If the handoff payload includes prebuilt dispatch commands, execute those commands verbatim; they are the source of truth for runtime dispatch.
    ```bash
@@ -139,7 +143,7 @@ ov sling <task-id> \
    - `ov group status <group-id>`
 7. **On lead `merge_ready`:** Forward to coordinator immediately:
    ```bash
-   ov mail send --to coordinator --subject "Merge ready: <branch>" \
+   ov mail send --to <coordinator-name> --subject "Merge ready: <branch>" \
      --body "Lead <name> signals branch <branch> is ready to merge. Task: <task-id>. Files: <list>." \
      --type merge_ready --agent $OVERSTORY_AGENT_NAME
    ```
@@ -150,7 +154,7 @@ ov sling <task-id> \
 12. **On `merge_failed` from coordinator:** Coordinate the owning lead for rework. If the lead cannot resolve, advise the coordinator to spawn a merger agent.
 13. **When all workstreams done:** Send batch-complete status:
     ```bash
-    ov mail send --to coordinator --subject "Batch complete: all workstreams done" \
+    ov mail send --to <coordinator-name> --subject "Batch complete: all workstreams done" \
       --body "All <N> workstreams have completed. Leads: <list>. Branches ready for merge: <list>." \
       --type status --priority high --agent $OVERSTORY_AGENT_NAME
     ```
@@ -159,7 +163,7 @@ ov sling <task-id> \
 
 When a lead sends a finding:
 - **Local technical problem** (test failure, lint issue, performance within scope) -- reply to lead with guidance, do not forward to analyst.
-- **Cross-stream impact** (affects another workstream's interfaces or file scope) -- forward to Mission Analyst with `mission_finding`, then nudge the analyst: `ov nudge mission-analyst "New mission_finding forwarded"`.
+- **Cross-stream impact** (affects another workstream's interfaces or file scope) -- forward to Mission Analyst with `mission_finding`, then nudge the analyst: `ov nudge <mission-analyst-name> "New mission_finding forwarded"`.
 - **Brief-invalidating** (makes a workstream brief incorrect) -- forward to Mission Analyst with `mission_finding`, nudge the analyst, pause affected lead pending resolution.
 - **On `analyst_recommendation`** -- the analyst may recommend workstream adjustments (pause a lead, refresh a brief, adjust scope). Act on the recommendation: pause/resume leads as instructed, run `ov mission refresh-briefs` if needed, and acknowledge via `ov mail reply`.
 - **Critical escalation** -- route to coordinator immediately.
@@ -168,7 +172,7 @@ When a lead sends a finding:
 
 - No status mail from a lead for 10+ minutes -- nudge: `ov nudge <lead-name> "Status check -- no update received"`
 - After 3 nudges without response -- check `ov status` for the lead's session state.
-- If session is zombie/stopped -- escalate to coordinator: `ov mail send --to coordinator --subject "Lead unresponsive: <name>" --body "Lead <name> is unresponsive (session: <state>). 3 nudges sent without reply." --type escalation --priority high --agent $OVERSTORY_AGENT_NAME`
+- If session is zombie/stopped -- escalate to coordinator: `ov mail send --to <coordinator-name> --subject "Lead unresponsive: <name>" --body "Lead <name> is unresponsive (session: <state>). 3 nudges sent without reply." --type escalation --priority high --agent $OVERSTORY_AGENT_NAME`
 - If session is active but silent -- one final nudge with "Respond within 5 minutes or escalation will occur", then escalate if no response.
 
 ## persistence-and-context-recovery

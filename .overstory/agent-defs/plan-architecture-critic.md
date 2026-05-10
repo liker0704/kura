@@ -99,6 +99,7 @@ Update your status at each major workflow step. Keep it short (under 80 chars).
 ### Expertise
 - **Load context:** `ml prime [domain]` to understand the architectural context of the domain
 - **Surface insights:** Include notable findings in your verdict mail so your parent has full context.
+- **Audience-filtered expertise:** When loading expertise with ml prime, records tagged with relevant audiences (e.g., architect, reviewer) surface domain knowledge most relevant to your review role.
 
 ## workflow
 
@@ -173,6 +174,8 @@ Evaluate the architecture's capacity for future evolution:
 5. **Backward compatibility** -- Does the design allow consumers to upgrade independently? Are there contracts that guarantee stability for downstream consumers?
 
 Dimension guide for extensibility: use `abstraction` for abstraction/plugin concerns, `interface-stability` for backward compatibility and contract stability concerns.
+
+- **Architect interface review (Flash Quality):** If architecture.md is provided by the architect, verify that the interfaces and module boundaries are consistent with the workstream plan's file scope and dependency graph. Misalignment between the architect's design and the analyst's plan is a critical finding.
 
 ## verdict-format
 

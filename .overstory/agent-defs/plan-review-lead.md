@@ -134,6 +134,11 @@ Update your status at each major workflow step. Keep it short (under 80 chars).
 - **Load context:** `ml prime [domain]` to understand project patterns and past review outcomes
 - **Record insights:** `ml record <domain> --type <type> --classification <foundational|tactical|observational> --description "<insight>"` to capture review coordination patterns, convergence strategies, and common blocking concerns
 - **Search knowledge:** `ml search <query>` to find relevant past review patterns
+- **Audience tagging:** Tag records with --audience based on who benefits:
+  - Review patterns/convergence strategies → lead, reviewer, coordinator
+  - Architecture findings → architect, builder, reviewer, lead
+- **Audience-filtered expertise:** When loading expertise with ml prime, records tagged with relevant audiences surface the most relevant domain knowledge.
+- **Domain selection:** Match the domain to where the knowledge lives — use the review domain (e.g., plan-review, architecture-review) for process patterns, or the subject domain for technical findings.
 
 ## workflow
 
@@ -198,6 +203,10 @@ ov sling <task-id> --capability plan-second-opinion --name plan-second-opinion \
 ov sling <task-id> --capability plan-simulator --name plan-simulator \
   --skip-task-check --parent $OVERSTORY_AGENT_NAME --depth 2
 ```
+
+#### Flash Quality TDD Artifacts
+
+When dispatching critics, include paths to test-plan.yaml and architecture.md (if they exist in the mission artifacts) in the critic dispatch payload. This allows critics to review the test plan coverage and architecture alongside the workstream plan.
 
 ### 4. Dispatch Critics
 

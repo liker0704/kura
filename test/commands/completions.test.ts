@@ -8,7 +8,7 @@ describe("completions command", () => {
       timeout: 15000,
     });
     expect(result).toContain("complete");
-    expect(result).toContain("mulch");
+    expect(result).toContain("kura");
     expect(result).toContain("record");
     expect(result).toContain("prime");
   });
@@ -19,7 +19,7 @@ describe("completions command", () => {
       timeout: 15000,
     });
     expect(result).toContain("compdef");
-    expect(result).toContain("mulch");
+    expect(result).toContain("kura");
     expect(result).toContain("record");
     expect(result).toContain("prime");
   });
@@ -29,7 +29,7 @@ describe("completions command", () => {
       encoding: "utf-8",
       timeout: 15000,
     });
-    expect(result).toContain("complete -c mulch");
+    expect(result).toContain("complete -c kura");
     expect(result).toContain("record");
     expect(result).toContain("prime");
   });

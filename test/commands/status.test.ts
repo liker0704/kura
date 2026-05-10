@@ -7,8 +7,8 @@ import { DEFAULT_CONFIG } from "../../src/schemas/config.ts";
 import type { ExpertiseRecord } from "../../src/schemas/record.ts";
 import {
   getExpertisePath,
-  getMulchDir,
-  initMulchDir,
+  getKuraDir,
+  initKuraDir,
   readConfig,
   writeConfig,
 } from "../../src/utils/config.ts";
@@ -26,27 +26,27 @@ describe("status command", () => {
   let tmpDir: string;
 
   beforeEach(async () => {
-    tmpDir = await mkdtemp(join(tmpdir(), "mulch-status-test-"));
-    await initMulchDir(tmpDir);
+    tmpDir = await mkdtemp(join(tmpdir(), "kura-status-test-"));
+    await initKuraDir(tmpDir);
   });
 
   afterEach(async () => {
     await rm(tmpDir, { recursive: true, force: true });
   });
 
-  it("detects .mulch/ directory exists", () => {
-    expect(existsSync(getMulchDir(tmpDir))).toBe(true);
+  it("detects .kura/ directory exists", () => {
+    expect(existsSync(getKuraDir(tmpDir))).toBe(true);
   });
 
-  it("detects missing .mulch/ directory", async () => {
-    const emptyDir = await mkdtemp(join(tmpdir(), "mulch-status-empty-"));
-    expect(existsSync(getMulchDir(emptyDir))).toBe(false);
+  it("detects missing .kura/ directory", async () => {
+    const emptyDir = await mkdtemp(join(tmpdir(), "kura-status-empty-"));
+    expect(existsSync(getKuraDir(emptyDir))).toBe(false);
     await rm(emptyDir, { recursive: true, force: true });
   });
 
   it("shows status with no domains configured", () => {
     const output = formatStatusOutput([], DEFAULT_CONFIG.governance);
-    expect(output).toContain("Mulch Status");
+    expect(output).toContain("Kura Status");
     expect(output).toContain("No domains configured");
   });
 
@@ -72,7 +72,7 @@ describe("status command", () => {
       DEFAULT_CONFIG.governance,
     );
 
-    expect(output).toContain("Mulch Status");
+    expect(output).toContain("Kura Status");
     expect(output).toContain("testing");
     expect(output).toContain("1 records");
   });

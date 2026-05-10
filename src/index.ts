@@ -13,7 +13,7 @@ export type {
   ExpertiseRecord,
 } from "./schemas/index.ts";
 
-export type { MulchConfig } from "./schemas/index.ts";
+export type { KuraConfig } from "./schemas/index.ts";
 export { DEFAULT_CONFIG } from "./schemas/index.ts";
 
 // Schema exports

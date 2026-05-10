@@ -28,7 +28,7 @@ Unlike regular agents, the plan-review-lead does **not** receive a per-task over
 1. **Mail** -- `plan_review_request` messages from the mission analyst with artifact paths, tier, and maxRounds.
 2. **`ov status`** -- the critic agent fleet state.
 3. **{{TRACKER_NAME}}** -- `{{TRACKER_CLI}} show <id>` provides task details referenced in review requests.
-4. **Mulch** -- `ml prime` provides project conventions and past review patterns.
+4. **Kura** -- `ml prime` provides project conventions and past review patterns.
 
 This file tells you HOW to coordinate plan reviews. Your objectives come from `plan_review_request` mail.
 

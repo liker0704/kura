@@ -42,7 +42,7 @@ if (
   const platform = `${process.platform}-${process.arch}`;
   console.log(
     JSON.stringify({
-      name: "@os-eco/mulch-cli",
+      name: "@hana/kura-cli",
       version: VERSION,
       runtime: "bun",
       platform,
@@ -65,7 +65,7 @@ const program = new Command();
 const COL_WIDTH = 20;
 
 program
-  .name("mulch")
+  .name("kura")
   .description("Structured expertise management")
   .showSuggestionAfterError(false)
   .version(VERSION, "-v, --version", "Print version")
@@ -77,7 +77,7 @@ program
     formatHelp(cmd, helper): string {
       const lines: string[] = [];
 
-      // Header: "mulch v0.6.2 — Structured expertise management"
+      // Header: "kura v0.6.2 — Structured expertise management"
       lines.push(
         `${brand.bold(cmd.name())} ${muted(`v${VERSION}`)} — Structured expertise management`,
       );
@@ -207,7 +207,7 @@ program.on("command:*", (operands: string[]) => {
     if (suggestion) {
       process.stderr.write(`Did you mean '${suggestion}'?\n`);
     }
-    process.stderr.write("Run 'mulch --help' for usage.\n");
+    process.stderr.write("Run 'kura --help' for usage.\n");
   }
   process.exitCode = 1;
 });

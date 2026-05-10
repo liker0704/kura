@@ -1,11 +1,11 @@
 {
-  "name": "@os-eco/mulch-cli",
+  "name": "@hana/kura-cli",
   "version": "0.6.3",
   "description": "Let your agents grow 🌱 — structured expertise files that accumulate over time, live in git, work with any agent",
   "type": "module",
   "bin": {
-    "mulch": "src/cli.ts",
-    "ml": "src/cli.ts"
+    "kura": "src/cli.ts",
+    "ku": "src/cli.ts"
   },
   "main": "src/index.ts",
   "files": ["src"],
@@ -32,11 +32,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/jayminwest/mulch.git"
+    "url": "https://github.com/jayminwest/kura.git"
   },
-  "homepage": "https://github.com/jayminwest/mulch#readme",
+  "homepage": "https://github.com/jayminwest/kura#readme",
   "bugs": {
-    "url": "https://github.com/jayminwest/mulch/issues"
+    "url": "https://github.com/jayminwest/kura/issues"
   },
   "dependencies": {
     "ajv": "^8.17.1",

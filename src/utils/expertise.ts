@@ -276,7 +276,7 @@ export function resolveRecordId(
 
   return {
     ok: false,
-    error: `Record "${identifier}" not found. Run \`mulch query\` to see record IDs.`,
+    error: `Record "${identifier}" not found. Run \`kura query\` to see record IDs.`,
   };
 }
 

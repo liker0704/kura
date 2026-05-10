@@ -6,8 +6,8 @@ import { join } from "node:path";
 import { DEFAULT_CONFIG } from "../../src/schemas/config.ts";
 import {
   getExpertisePath,
-  getMulchDir,
-  initMulchDir,
+  getKuraDir,
+  initKuraDir,
   readConfig,
   writeConfig,
 } from "../../src/utils/config.ts";
@@ -17,8 +17,8 @@ describe("add command", () => {
   let tmpDir: string;
 
   beforeEach(async () => {
-    tmpDir = await mkdtemp(join(tmpdir(), "mulch-add-test-"));
-    await initMulchDir(tmpDir);
+    tmpDir = await mkdtemp(join(tmpdir(), "kura-add-test-"));
+    await initKuraDir(tmpDir);
   });
 
   afterEach(async () => {
@@ -91,9 +91,9 @@ describe("add command", () => {
     expect(path).toContain("testing.jsonl");
   });
 
-  it("requires .mulch/ directory to exist", async () => {
-    const emptyDir = await mkdtemp(join(tmpdir(), "mulch-add-empty-"));
-    expect(existsSync(getMulchDir(emptyDir))).toBe(false);
+  it("requires .kura/ directory to exist", async () => {
+    const emptyDir = await mkdtemp(join(tmpdir(), "kura-add-empty-"));
+    expect(existsSync(getKuraDir(emptyDir))).toBe(false);
     await rm(emptyDir, { recursive: true, force: true });
   });
 

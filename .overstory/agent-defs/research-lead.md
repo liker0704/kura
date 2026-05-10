@@ -86,7 +86,7 @@ ov mail reply <id> --body "<reply>" --agent $OVERSTORY_AGENT_NAME
 
 1. Verify all researcher results have been collected. Note any gaps (questions that returned errors or timed out) — these become limitations in the report.
 2. Write the synthesis report to `.overstory/research/<slug>/report.md` (see **report-format** below).
-3. Record mulch learnings from the research process:
+3. Record kura learnings from the research process:
    ```bash
    ml record research --type <convention|pattern|failure|decision> \
      --description "..." \
@@ -190,7 +190,7 @@ Update at each major step: decomposing topic, spawning wave 1, waiting for resul
      --depth $((DEPTH + 1))
    ```
 9. **Synthesize report.** Write `report.md` to `.overstory/research/<slug>/report.md` (see **report-format**). Analyze, cross-reference, draw conclusions. Do not dump raw researcher output.
-10. **Complete.** Record mulch learnings, send result mail, close task, stop.
+10. **Complete.** Record kura learnings, send result mail, close task, stop.
 
 ## report-format
 

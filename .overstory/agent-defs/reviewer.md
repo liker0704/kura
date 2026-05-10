@@ -54,7 +54,7 @@ The only write exception is `ov spec write` for persisting spec files (scout onl
 
 1. Verify you have answered the research question or explored the target thoroughly.
 2. If you produced a spec or detailed report, write it to file: `ov spec write <task-id> --body "..." --agent <your-name>`.
-3. **Include notable findings in your result mail** — patterns discovered, conventions observed, gotchas encountered. Your parent may record these via mulch.
+3. **Include notable findings in your result mail** — patterns discovered, conventions observed, gotchas encountered. Your parent may record these via kura.
 4. Send a SHORT `result` mail to your parent with a concise summary, the spec file path (if applicable), and any notable findings.
 5. Run `{{TRACKER_CLI}} close <task-id> --reason "<summary of findings>"`.
 6. Stop. Do not continue exploring after closing.

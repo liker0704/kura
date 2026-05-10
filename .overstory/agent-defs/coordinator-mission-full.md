@@ -331,7 +331,7 @@ When Flash Quality TDD is active and all workstream branches are merged:
 4. Commit state:
    ```bash
    {{TRACKER_CLI}} sync
-   git add .overstory/ .mulch/
+   git add .overstory/ .kura/
    git diff --cached --quiet || git commit -m "chore: sync os-eco runtime state"
    git push
    ```

@@ -21,7 +21,7 @@ export function parseExpertiseDiff(diffOutput: string): DiffEntry[] {
   for (const line of lines) {
     // Extract domain from 'diff --git' headers
     if (line.startsWith("diff --git")) {
-      const match = line.match(/\.mulch\/expertise\/([^/]+)\.jsonl/);
+      const match = line.match(/\.kura\/expertise\/([^/]+)\.jsonl/);
       if (match) {
         currentDomain = match[1];
         if (!entriesMap.has(currentDomain)) {
@@ -133,7 +133,7 @@ export function registerDiffCommand(program: Command): void {
         try {
           diffOutput = execFileSync(
             "git",
-            ["diff", options.since, "--", ".mulch/expertise/"],
+            ["diff", options.since, "--", ".kura/expertise/"],
             {
               cwd,
               encoding: "utf-8",

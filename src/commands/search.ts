@@ -112,7 +112,7 @@ export function registerSearchCommand(program: Command): void {
                   `Error: Domain "${options.domain}" not found in config. Available domains: ${config.domains.join(", ")}`,
                 );
                 console.error(
-                  `Hint: Run \`mulch add ${options.domain}\` to create this domain, or check .mulch/mulch.config.yaml`,
+                  `Hint: Run \`kura add ${options.domain}\` to create this domain, or check .kura/kura.config.yaml`,
                 );
               }
               process.exitCode = 1;
@@ -280,11 +280,11 @@ export function registerSearchCommand(program: Command): void {
             if (jsonMode) {
               outputJsonError(
                 "search",
-                "No .mulch/ directory found. Run `mulch init` first.",
+                "No .kura/ directory found. Run `kura init` first.",
               );
             } else {
               console.error(
-                "Error: No .mulch/ directory found. Run `mulch init` first.",
+                "Error: No .kura/ directory found. Run `kura init` first.",
               );
             }
           } else {

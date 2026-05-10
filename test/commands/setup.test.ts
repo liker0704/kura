@@ -19,14 +19,14 @@ import {
   recipes,
   removeGitHook,
 } from "../../src/commands/setup.ts";
-import { initMulchDir } from "../../src/utils/config.ts";
+import { initKuraDir } from "../../src/utils/config.ts";
 
 describe("setup command", () => {
   let tmpDir: string;
 
   beforeEach(async () => {
-    tmpDir = await mkdtemp(join(tmpdir(), "mulch-setup-test-"));
-    await initMulchDir(tmpDir);
+    tmpDir = await mkdtemp(join(tmpdir(), "kura-setup-test-"));
+    await initKuraDir(tmpDir);
   });
 
   afterEach(async () => {
@@ -132,7 +132,7 @@ describe("setup command", () => {
       const result = await recipes.cursor.install(tmpDir);
       expect(result.success).toBe(true);
 
-      const rulePath = join(tmpDir, ".cursor", "rules", "mulch.mdc");
+      const rulePath = join(tmpDir, ".cursor", "rules", "kura.mdc");
       expect(existsSync(rulePath)).toBe(true);
 
       const content = await readFile(rulePath, "utf-8");
@@ -159,7 +159,7 @@ describe("setup command", () => {
 
     it("check detects modified file", async () => {
       await recipes.cursor.install(tmpDir);
-      const rulePath = join(tmpDir, ".cursor", "rules", "mulch.mdc");
+      const rulePath = join(tmpDir, ".cursor", "rules", "kura.mdc");
       await writeFile(rulePath, "modified content", "utf-8");
 
       const result = await recipes.cursor.check(tmpDir);
@@ -172,7 +172,7 @@ describe("setup command", () => {
       const result = await recipes.cursor.remove(tmpDir);
       expect(result.success).toBe(true);
 
-      const rulePath = join(tmpDir, ".cursor", "rules", "mulch.mdc");
+      const rulePath = join(tmpDir, ".cursor", "rules", "kura.mdc");
       expect(existsSync(rulePath)).toBe(false);
     });
 
@@ -185,14 +185,14 @@ describe("setup command", () => {
   // ── Codex recipe ───────────────────────────────────────────
 
   describe("codex recipe", () => {
-    it("creates AGENTS.md with mulch section", async () => {
+    it("creates AGENTS.md with kura section", async () => {
       const result = await recipes.codex.install(tmpDir);
       expect(result.success).toBe(true);
 
       const agentsPath = join(tmpDir, "AGENTS.md");
       const content = await readFile(agentsPath, "utf-8");
-      expect(content).toContain("<!-- mulch:start -->");
-      expect(content).toContain("mulch prime");
+      expect(content).toContain("<!-- kura:start -->");
+      expect(content).toContain("kura prime");
     });
 
     it("appends to existing AGENTS.md", async () => {
@@ -207,7 +207,7 @@ describe("setup command", () => {
 
       const content = await readFile(agentsPath, "utf-8");
       expect(content).toContain("# Existing Content");
-      expect(content).toContain("<!-- mulch:start -->");
+      expect(content).toContain("<!-- kura:start -->");
     });
 
     it("is idempotent", async () => {
@@ -228,7 +228,7 @@ describe("setup command", () => {
       expect(result.success).toBe(false);
     });
 
-    it("remove strips mulch section", async () => {
+    it("remove strips kura section", async () => {
       const agentsPath = join(tmpDir, "AGENTS.md");
       await writeFile(agentsPath, "# Header\n\nParagraph.\n", "utf-8");
       await recipes.codex.install(tmpDir);
@@ -236,7 +236,7 @@ describe("setup command", () => {
 
       const content = await readFile(agentsPath, "utf-8");
       expect(content).toContain("# Header");
-      expect(content).not.toContain("<!-- mulch:start -->");
+      expect(content).not.toContain("<!-- kura:start -->");
     });
 
     it("remove is safe when file does not exist", async () => {
@@ -248,7 +248,7 @@ describe("setup command", () => {
   // ── Gemini recipe ──────────────────────────────────────────
 
   describe("gemini recipe", () => {
-    it("creates settings file with mulch section", async () => {
+    it("creates settings file with kura section", async () => {
       const result = await recipes.gemini.install(tmpDir);
       expect(result.success).toBe(true);
 
@@ -256,8 +256,8 @@ describe("setup command", () => {
       expect(existsSync(filePath)).toBe(true);
 
       const content = await readFile(filePath, "utf-8");
-      expect(content).toContain("<!-- mulch:start -->");
-      expect(content).toContain("mulch prime");
+      expect(content).toContain("<!-- kura:start -->");
+      expect(content).toContain("kura prime");
     });
 
     it("check passes after install", async () => {
@@ -272,14 +272,14 @@ describe("setup command", () => {
 
       const filePath = join(tmpDir, ".gemini", "settings.md");
       const content = await readFile(filePath, "utf-8");
-      expect(content).not.toContain("<!-- mulch:start -->");
+      expect(content).not.toContain("<!-- kura:start -->");
     });
   });
 
   // ── Windsurf recipe ────────────────────────────────────────
 
   describe("windsurf recipe", () => {
-    it("creates rules file with mulch section", async () => {
+    it("creates rules file with kura section", async () => {
       const result = await recipes.windsurf.install(tmpDir);
       expect(result.success).toBe(true);
 
@@ -287,7 +287,7 @@ describe("setup command", () => {
       expect(existsSync(filePath)).toBe(true);
 
       const content = await readFile(filePath, "utf-8");
-      expect(content).toContain("mulch prime");
+      expect(content).toContain("kura prime");
     });
 
     it("check passes after install", async () => {
@@ -302,14 +302,14 @@ describe("setup command", () => {
 
       const filePath = join(tmpDir, ".windsurf", "rules.md");
       const content = await readFile(filePath, "utf-8");
-      expect(content).not.toContain("<!-- mulch:start -->");
+      expect(content).not.toContain("<!-- kura:start -->");
     });
   });
 
   // ── Aider recipe ───────────────────────────────────────────
 
   describe("aider recipe", () => {
-    it("creates config file with mulch section", async () => {
+    it("creates config file with kura section", async () => {
       const result = await recipes.aider.install(tmpDir);
       expect(result.success).toBe(true);
 
@@ -317,7 +317,7 @@ describe("setup command", () => {
       expect(existsSync(filePath)).toBe(true);
 
       const content = await readFile(filePath, "utf-8");
-      expect(content).toContain("mulch prime");
+      expect(content).toContain("kura prime");
     });
 
     it("check passes after install", async () => {
@@ -332,7 +332,7 @@ describe("setup command", () => {
 
       const filePath = join(tmpDir, ".aider.conf.md");
       const content = await readFile(filePath, "utf-8");
-      expect(content).not.toContain("<!-- mulch:start -->");
+      expect(content).not.toContain("<!-- kura:start -->");
     });
   });
 
@@ -350,7 +350,7 @@ describe("setup command", () => {
 
       const content = await readFile(hookPath, "utf-8");
       expect(content).toContain("#!/bin/sh");
-      expect(content).toContain("mulch validate");
+      expect(content).toContain("kura validate");
     });
 
     it("makes hook executable", async () => {
@@ -377,7 +377,7 @@ describe("setup command", () => {
 
       const content = await readFile(hookPath, "utf-8");
       expect(content).toContain("echo 'existing hook'");
-      expect(content).toContain("mulch validate");
+      expect(content).toContain("kura validate");
     });
 
     it("is idempotent", async () => {
@@ -390,7 +390,7 @@ describe("setup command", () => {
       const hookPath = join(tmpDir, ".git", "hooks", "pre-commit");
       const content = await readFile(hookPath, "utf-8");
       // Only one marker
-      const markerCount = content.split("# mulch:start").length - 1;
+      const markerCount = content.split("# kura:start").length - 1;
       expect(markerCount).toBe(1);
     });
 
@@ -408,7 +408,7 @@ describe("setup command", () => {
       expect(result.success).toBe(false);
     });
 
-    it("remove strips mulch section", async () => {
+    it("remove strips kura section", async () => {
       const hooksDir = join(tmpDir, ".git", "hooks");
       await mkdir(hooksDir, { recursive: true });
 
@@ -419,14 +419,14 @@ describe("setup command", () => {
       await installGitHook(tmpDir);
       const result = await removeGitHook(tmpDir);
       expect(result.success).toBe(true);
-      expect(result.message).toContain("Removed mulch section");
+      expect(result.message).toContain("Removed kura section");
 
       const content = await readFile(hookPath, "utf-8");
       expect(content).toContain("echo 'existing hook'");
-      expect(content).not.toContain("# mulch:start");
+      expect(content).not.toContain("# kura:start");
     });
 
-    it("remove deletes file if only mulch content", async () => {
+    it("remove deletes file if only kura content", async () => {
       await mkdir(join(tmpDir, ".git", "hooks"), { recursive: true });
       await installGitHook(tmpDir);
 
@@ -439,7 +439,7 @@ describe("setup command", () => {
     });
 
     it("fails gracefully when not a git repo", async () => {
-      // tmpDir has no .git directory since we only created .mulch
+      // tmpDir has no .git directory since we only created .kura
       // First remove any .git dir that might exist
       const gitDir = join(tmpDir, ".git");
       if (existsSync(gitDir)) {

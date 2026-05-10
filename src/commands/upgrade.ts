@@ -7,12 +7,12 @@ import {
   getLatestVersion,
 } from "../utils/version.ts";
 
-const PACKAGE_NAME = "@os-eco/mulch-cli";
+const PACKAGE_NAME = "@hana/kura-cli";
 
 export function registerUpgradeCommand(program: Command): void {
   program
     .command("upgrade")
-    .description("Upgrade mulch to the latest version")
+    .description("Upgrade kura to the latest version")
     .option("--check", "Check for updates without installing")
     .action(async (options: { check?: boolean }) => {
       const jsonMode = program.opts().json === true;
@@ -47,7 +47,7 @@ export function registerUpgradeCommand(program: Command): void {
             updated: false,
           });
         } else {
-          printSuccess(`mulch is up to date (v${current})`);
+          printSuccess(`kura is up to date (v${current})`);
         }
         return;
       }
@@ -101,7 +101,7 @@ export function registerUpgradeCommand(program: Command): void {
           updated: true,
         });
       } else {
-        printSuccess(`Updated mulch v${current} → v${latest}`);
+        printSuccess(`Updated kura v${current} → v${latest}`);
       }
     });
 }

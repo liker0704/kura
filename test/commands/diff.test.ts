@@ -7,10 +7,10 @@ import {
 describe("diff command", () => {
   describe("parseExpertiseDiff", () => {
     it("parses added records from diff output", () => {
-      const diffOutput = `diff --git a/.mulch/expertise/cli.jsonl b/.mulch/expertise/cli.jsonl
+      const diffOutput = `diff --git a/.kura/expertise/cli.jsonl b/.kura/expertise/cli.jsonl
 index abc123..def456 100644
---- a/.mulch/expertise/cli.jsonl
-+++ b/.mulch/expertise/cli.jsonl
+--- a/.kura/expertise/cli.jsonl
++++ b/.kura/expertise/cli.jsonl
 @@ -1,2 +1,3 @@
  {"type":"convention","content":"Use ESM","classification":"foundational","recorded_at":"2024-01-01T00:00:00.000Z","id":"mx-aaa111"}
 +{"type":"pattern","name":"diff-cmd","description":"Shows changes","classification":"tactical","recorded_at":"2024-01-02T00:00:00.000Z","id":"mx-bbb222"}`;
@@ -26,10 +26,10 @@ index abc123..def456 100644
     });
 
     it("parses removed records from diff output", () => {
-      const diffOutput = `diff --git a/.mulch/expertise/cli.jsonl b/.mulch/expertise/cli.jsonl
+      const diffOutput = `diff --git a/.kura/expertise/cli.jsonl b/.kura/expertise/cli.jsonl
 index abc123..def456 100644
---- a/.mulch/expertise/cli.jsonl
-+++ b/.mulch/expertise/cli.jsonl
+--- a/.kura/expertise/cli.jsonl
++++ b/.kura/expertise/cli.jsonl
 @@ -1,2 +1,1 @@
  {"type":"convention","content":"Use ESM","classification":"foundational","recorded_at":"2024-01-01T00:00:00.000Z","id":"mx-aaa111"}
 -{"type":"failure","description":"Old bug","resolution":"Fixed it","classification":"observational","recorded_at":"2024-01-01T00:00:00.000Z","id":"mx-ccc333"}`;
@@ -45,17 +45,17 @@ index abc123..def456 100644
     });
 
     it("groups by domain", () => {
-      const diffOutput = `diff --git a/.mulch/expertise/cli.jsonl b/.mulch/expertise/cli.jsonl
+      const diffOutput = `diff --git a/.kura/expertise/cli.jsonl b/.kura/expertise/cli.jsonl
 index abc123..def456 100644
---- a/.mulch/expertise/cli.jsonl
-+++ b/.mulch/expertise/cli.jsonl
+--- a/.kura/expertise/cli.jsonl
++++ b/.kura/expertise/cli.jsonl
 @@ -1,1 +1,2 @@
  {"type":"convention","content":"Use ESM","classification":"foundational","recorded_at":"2024-01-01T00:00:00.000Z","id":"mx-aaa111"}
 +{"type":"pattern","name":"cli-pattern","description":"CLI pattern","classification":"tactical","recorded_at":"2024-01-02T00:00:00.000Z","id":"mx-bbb222"}
-diff --git a/.mulch/expertise/testing.jsonl b/.mulch/expertise/testing.jsonl
+diff --git a/.kura/expertise/testing.jsonl b/.kura/expertise/testing.jsonl
 index xyz789..uvw456 100644
---- a/.mulch/expertise/testing.jsonl
-+++ b/.mulch/expertise/testing.jsonl
+--- a/.kura/expertise/testing.jsonl
++++ b/.kura/expertise/testing.jsonl
 @@ -1,1 +1,2 @@
  {"type":"convention","content":"No mocks","classification":"foundational","recorded_at":"2024-01-01T00:00:00.000Z","id":"mx-ddd444"}
 +{"type":"pattern","name":"test-pattern","description":"Test pattern","classification":"tactical","recorded_at":"2024-01-02T00:00:00.000Z","id":"mx-eee555"}`;
@@ -72,16 +72,16 @@ index xyz789..uvw456 100644
     });
 
     it("handles multiple domains in one diff", () => {
-      const diffOutput = `diff --git a/.mulch/expertise/alpha.jsonl b/.mulch/expertise/alpha.jsonl
+      const diffOutput = `diff --git a/.kura/expertise/alpha.jsonl b/.kura/expertise/alpha.jsonl
 index abc123..def456 100644
---- a/.mulch/expertise/alpha.jsonl
-+++ b/.mulch/expertise/alpha.jsonl
+--- a/.kura/expertise/alpha.jsonl
++++ b/.kura/expertise/alpha.jsonl
 @@ -1,1 +1,2 @@
 +{"type":"convention","content":"Alpha convention","classification":"foundational","recorded_at":"2024-01-01T00:00:00.000Z","id":"mx-aaa111"}
-diff --git a/.mulch/expertise/beta.jsonl b/.mulch/expertise/beta.jsonl
+diff --git a/.kura/expertise/beta.jsonl b/.kura/expertise/beta.jsonl
 index xyz789..uvw456 100644
---- a/.mulch/expertise/beta.jsonl
-+++ b/.mulch/expertise/beta.jsonl
+--- a/.kura/expertise/beta.jsonl
++++ b/.kura/expertise/beta.jsonl
 @@ -1,1 +1,1 @@
 -{"type":"convention","content":"Beta convention","classification":"foundational","recorded_at":"2024-01-01T00:00:00.000Z","id":"mx-bbb222"}`;
 
@@ -98,10 +98,10 @@ index xyz789..uvw456 100644
     });
 
     it("skips non-JSON lines (hunk headers, context)", () => {
-      const diffOutput = `diff --git a/.mulch/expertise/cli.jsonl b/.mulch/expertise/cli.jsonl
+      const diffOutput = `diff --git a/.kura/expertise/cli.jsonl b/.kura/expertise/cli.jsonl
 index abc123..def456 100644
---- a/.mulch/expertise/cli.jsonl
-+++ b/.mulch/expertise/cli.jsonl
+--- a/.kura/expertise/cli.jsonl
++++ b/.kura/expertise/cli.jsonl
 @@ -1,2 +1,3 @@
  {"type":"convention","content":"Use ESM","classification":"foundational","recorded_at":"2024-01-01T00:00:00.000Z","id":"mx-aaa111"}
 +{"type":"pattern","name":"diff-cmd","description":"Shows changes","classification":"tactical","recorded_at":"2024-01-02T00:00:00.000Z","id":"mx-bbb222"}
@@ -121,10 +121,10 @@ index abc123..def456 100644
     });
 
     it("filters out domains with no actual changes", () => {
-      const diffOutput = `diff --git a/.mulch/expertise/cli.jsonl b/.mulch/expertise/cli.jsonl
+      const diffOutput = `diff --git a/.kura/expertise/cli.jsonl b/.kura/expertise/cli.jsonl
 index abc123..def456 100644
---- a/.mulch/expertise/cli.jsonl
-+++ b/.mulch/expertise/cli.jsonl
+--- a/.kura/expertise/cli.jsonl
++++ b/.kura/expertise/cli.jsonl
 @@ -1,1 +1,1 @@
  {"type":"convention","content":"Use ESM","classification":"foundational","recorded_at":"2024-01-01T00:00:00.000Z","id":"mx-aaa111"}`;
 
@@ -135,10 +135,10 @@ index abc123..def456 100644
     });
 
     it("parses both added and removed records in same domain", () => {
-      const diffOutput = `diff --git a/.mulch/expertise/cli.jsonl b/.mulch/expertise/cli.jsonl
+      const diffOutput = `diff --git a/.kura/expertise/cli.jsonl b/.kura/expertise/cli.jsonl
 index abc123..def456 100644
---- a/.mulch/expertise/cli.jsonl
-+++ b/.mulch/expertise/cli.jsonl
+--- a/.kura/expertise/cli.jsonl
++++ b/.kura/expertise/cli.jsonl
 @@ -1,2 +1,3 @@
  {"type":"convention","content":"Use ESM","classification":"foundational","recorded_at":"2024-01-01T00:00:00.000Z","id":"mx-aaa111"}
 +{"type":"pattern","name":"diff-cmd","description":"Shows changes","classification":"tactical","recorded_at":"2024-01-02T00:00:00.000Z","id":"mx-bbb222"}

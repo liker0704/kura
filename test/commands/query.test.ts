@@ -8,7 +8,7 @@ import { DEFAULT_CONFIG } from "../../src/schemas/config.ts";
 import type { ExpertiseRecord } from "../../src/schemas/record.ts";
 import {
   getExpertisePath,
-  initMulchDir,
+  initKuraDir,
   writeConfig,
 } from "../../src/utils/config.ts";
 import {
@@ -29,8 +29,8 @@ describe("query command", () => {
   let tmpDir: string;
 
   beforeEach(async () => {
-    tmpDir = await mkdtemp(join(tmpdir(), "mulch-query-test-"));
-    await initMulchDir(tmpDir);
+    tmpDir = await mkdtemp(join(tmpdir(), "kura-query-test-"));
+    await initKuraDir(tmpDir);
   });
 
   afterEach(async () => {
@@ -263,7 +263,7 @@ describe("query command", () => {
     function makeProgram(): Command {
       const program = new Command();
       program
-        .name("mulch")
+        .name("kura")
         .option("--json", "output as structured JSON")
         .exitOverride();
       registerQueryCommand(program);
@@ -287,7 +287,7 @@ describe("query command", () => {
         const program = makeProgram();
         await program.parseAsync([
           "node",
-          "mulch",
+          "kura",
           "--json",
           "query",
           "testing",
@@ -336,7 +336,7 @@ describe("query command", () => {
       const logSpy = spyOn(console, "log").mockImplementation(() => {});
       try {
         const program = makeProgram();
-        await program.parseAsync(["node", "mulch", "--json", "query", "--all"]);
+        await program.parseAsync(["node", "kura", "--json", "query", "--all"]);
 
         expect(logSpy).toHaveBeenCalledTimes(1);
         const output = JSON.parse(logSpy.mock.calls[0][0] as string) as {
@@ -362,7 +362,7 @@ describe("query command", () => {
       const logSpy = spyOn(console, "log").mockImplementation(() => {});
       try {
         const program = makeProgram();
-        await program.parseAsync(["node", "mulch", "--json", "query", "--all"]);
+        await program.parseAsync(["node", "kura", "--json", "query", "--all"]);
 
         expect(logSpy).toHaveBeenCalledTimes(1);
         const output = JSON.parse(logSpy.mock.calls[0][0] as string) as {
@@ -387,7 +387,7 @@ describe("query command", () => {
         const program = makeProgram();
         await program.parseAsync([
           "node",
-          "mulch",
+          "kura",
           "--json",
           "query",
           "nonexistent",
@@ -414,15 +414,15 @@ describe("query command", () => {
       const errorSpy = spyOn(console, "error").mockImplementation(() => {});
       try {
         const program = makeProgram();
-        await program.parseAsync(["node", "mulch", "query", "nonexistent"]);
+        await program.parseAsync(["node", "kura", "query", "nonexistent"]);
 
         expect(errorSpy).toHaveBeenCalledTimes(2);
         expect(errorSpy.mock.calls[0][0] as string).toContain("nonexistent");
         expect(errorSpy.mock.calls[1][0] as string).toContain(
-          "mulch add nonexistent",
+          "kura add nonexistent",
         );
         expect(errorSpy.mock.calls[1][0] as string).toContain(
-          ".mulch/mulch.config.yaml",
+          ".kura/kura.config.yaml",
         );
       } finally {
         errorSpy.mockRestore();
@@ -436,7 +436,7 @@ describe("query command", () => {
       const errorSpy = spyOn(console, "error").mockImplementation(() => {});
       try {
         const program = makeProgram();
-        await program.parseAsync(["node", "mulch", "--json", "query"]);
+        await program.parseAsync(["node", "kura", "--json", "query"]);
 
         expect(errorSpy).toHaveBeenCalledTimes(1);
         const output = JSON.parse(errorSpy.mock.calls[0][0] as string) as {
@@ -452,14 +452,14 @@ describe("query command", () => {
       }
     });
 
-    it("returns JSON error when no .mulch/ directory exists", async () => {
-      // Do not call initMulchDir — use a bare tmpDir
-      const bareTmpDir = await mkdtemp(join(tmpdir(), "mulch-query-bare-"));
+    it("returns JSON error when no .kura/ directory exists", async () => {
+      // Do not call initKuraDir — use a bare tmpDir
+      const bareTmpDir = await mkdtemp(join(tmpdir(), "kura-query-bare-"));
       process.chdir(bareTmpDir);
       const errorSpy = spyOn(console, "error").mockImplementation(() => {});
       try {
         const program = makeProgram();
-        await program.parseAsync(["node", "mulch", "--json", "query", "--all"]);
+        await program.parseAsync(["node", "kura", "--json", "query", "--all"]);
 
         expect(errorSpy).toHaveBeenCalledTimes(1);
         const output = JSON.parse(errorSpy.mock.calls[0][0] as string) as {
@@ -469,7 +469,7 @@ describe("query command", () => {
         };
         expect(output.success).toBe(false);
         expect(output.command).toBe("query");
-        expect(output.error).toContain(".mulch/");
+        expect(output.error).toContain(".kura/");
       } finally {
         errorSpy.mockRestore();
         await rm(bareTmpDir, { recursive: true, force: true });
@@ -500,7 +500,7 @@ describe("query command", () => {
         const program = makeProgram();
         await program.parseAsync([
           "node",
-          "mulch",
+          "kura",
           "--json",
           "query",
           "testing",
@@ -544,7 +544,7 @@ describe("query command", () => {
         const program = makeProgram();
         await program.parseAsync([
           "node",
-          "mulch",
+          "kura",
           "--json",
           "query",
           "testing",
@@ -597,7 +597,7 @@ describe("query command", () => {
         const program = makeProgram();
         await program.parseAsync([
           "node",
-          "mulch",
+          "kura",
           "--json",
           "query",
           "testing",
@@ -632,7 +632,7 @@ describe("query command", () => {
         const program = makeProgram();
         await program.parseAsync([
           "node",
-          "mulch",
+          "kura",
           "--json",
           "query",
           "testing",
@@ -781,7 +781,7 @@ describe("query command", () => {
     function makeProgram(): Command {
       const program = new Command();
       program
-        .name("mulch")
+        .name("kura")
         .option("--json", "output as structured JSON")
         .exitOverride();
       registerQueryCommand(program);
@@ -820,7 +820,7 @@ describe("query command", () => {
         const program = makeProgram();
         await program.parseAsync([
           "node",
-          "mulch",
+          "kura",
           "--json",
           "query",
           "testing",
@@ -873,7 +873,7 @@ describe("query command", () => {
         const program = makeProgram();
         await program.parseAsync([
           "node",
-          "mulch",
+          "kura",
           "--json",
           "query",
           "testing",
@@ -912,7 +912,7 @@ describe("query command", () => {
         const program = makeProgram();
         await program.parseAsync([
           "node",
-          "mulch",
+          "kura",
           "--json",
           "query",
           "testing",
@@ -959,7 +959,7 @@ describe("query command", () => {
         const program = makeProgram();
         await program.parseAsync([
           "node",
-          "mulch",
+          "kura",
           "--json",
           "query",
           "testing",
@@ -1152,7 +1152,7 @@ describe("query command", () => {
     function makeProgram(): Command {
       const program = new Command();
       program
-        .name("mulch")
+        .name("kura")
         .option("--json", "output as structured JSON")
         .exitOverride();
       registerQueryCommand(program);
@@ -1177,7 +1177,7 @@ describe("query command", () => {
         const program = makeProgram();
         await program.parseAsync([
           "node",
-          "mulch",
+          "kura",
           "query",
           "testing",
           "--format",
@@ -1217,7 +1217,7 @@ describe("query command", () => {
         const program = makeProgram();
         await program.parseAsync([
           "node",
-          "mulch",
+          "kura",
           "query",
           "testing",
           "--format",
@@ -1259,7 +1259,7 @@ describe("query command", () => {
         const program = makeProgram();
         await program.parseAsync([
           "node",
-          "mulch",
+          "kura",
           "query",
           "testing",
           "--format",
@@ -1291,7 +1291,7 @@ describe("query command", () => {
       const logSpy = spyOn(console, "log").mockImplementation(() => {});
       try {
         const program = makeProgram();
-        await program.parseAsync(["node", "mulch", "query", "testing"]);
+        await program.parseAsync(["node", "kura", "query", "testing"]);
 
         expect(logSpy).toHaveBeenCalledTimes(1);
         const output = logSpy.mock.calls[0][0] as string;

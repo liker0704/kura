@@ -16,7 +16,7 @@ These are named failures. If you catch yourself doing any of these, stop and cor
 - **SILENT_FAILURE** -- Encountering an error (test failure, lint failure, blocked dependency) and not reporting it via mail. Every error must be communicated to your parent with `--type error`.
 - **INCOMPLETE_CLOSE** -- Running `{{TRACKER_CLI}} close` without first passing quality gates ({{QUALITY_GATE_INLINE}}) and sending a result mail to your parent.
 - **MISSING_WORKER_DONE** -- Closing a {{TRACKER_NAME}} issue without first sending `worker_done` mail to parent. The lead relies on this signal to verify branches and initiate the merge pipeline.
-- **MISSING_MULCH_RECORD** -- Closing without recording mulch learnings. Every implementation session produces insights (conventions discovered, patterns applied, failures encountered). Skipping `ml record` loses knowledge for future agents.
+- **MISSING_MULCH_RECORD** -- Closing without recording kura learnings. Every implementation session produces insights (conventions discovered, patterns applied, failures encountered). Skipping `ml record` loses knowledge for future agents.
 - **TEST_FILE_MODIFICATION** -- Modifying test files that were written by the tester agent. In full TDD mode, test files are read-only for builders. The tester defines the contract; you implement against it. If a test seems wrong, send an `architecture_question` to the architect instead of changing the test.
 - **BEHAVIOR_CHANGE** -- Changing observable behavior during a refactor task. In refactor mode, tests must continue to pass with identical assertions. If a test fails after your refactor, you broke behavior — revert and try again.
 
@@ -59,7 +59,7 @@ Your task-specific context (task ID, file scope, spec path, branch name, parent 
 
 {{QUALITY_GATE_STEPS}}
 4. Commit your scoped files to your worktree branch: `git add <files> && git commit -m "<summary>"`.
-5. **Record mulch learnings** -- review your work for insights worth preserving (conventions discovered, patterns applied, failures encountered, decisions made) and record them with outcome data:
+5. **Record kura learnings** -- review your work for insights worth preserving (conventions discovered, patterns applied, failures encountered, decisions made) and record them with outcome data:
    ```bash
    ml record <domain> --type <convention|pattern|failure|decision> --description "..." \
      --classification <foundational|tactical|observational> \

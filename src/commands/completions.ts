@@ -15,40 +15,40 @@ function getGlobalOptions(program: Command): string[] {
 
 function generateBash(commands: string[], globalOptions: string[]): string {
   const allWords = [...commands, ...globalOptions].join(" ");
-  return `# mulch bash completions
-# Add to ~/.bashrc: eval "$(mulch completions bash)"
+  return `# kura bash completions
+# Add to ~/.bashrc: eval "$(kura completions bash)"
 _mulch() {
   local cur="\${COMP_WORDS[COMP_CWORD]}"
   COMPREPLY=( $(compgen -W "${allWords}" -- "\$cur") )
 }
-complete -F _mulch mulch
+complete -F _mulch kura
 complete -F _mulch ml
 `;
 }
 
 function generateZsh(commands: string[], globalOptions: string[]): string {
   const allWords = [...commands, ...globalOptions].join(" ");
-  return `# mulch zsh completions
-# Add to ~/.zshrc: eval "$(mulch completions zsh)"
+  return `# kura zsh completions
+# Add to ~/.zshrc: eval "$(kura completions zsh)"
 _mulch() {
   local -a words
   words=(${allWords})
-  _describe 'mulch commands' words
+  _describe 'kura commands' words
 }
-compdef _mulch mulch
+compdef _mulch kura
 compdef _mulch ml
 `;
 }
 
 function generateFish(commands: string[], _globalOptions: string[]): string {
   const lines = [
-    "# mulch fish completions",
-    "# Save to ~/.config/fish/completions/mulch.fish",
+    "# kura fish completions",
+    "# Save to ~/.config/fish/completions/kura.fish",
     "",
   ];
   for (const cmd of commands) {
     lines.push(
-      `complete -c mulch -n '__fish_use_subcommand' -a '${cmd}' -d '${cmd} command'`,
+      `complete -c kura -n '__fish_use_subcommand' -a '${cmd}' -d '${cmd} command'`,
     );
     lines.push(
       `complete -c ml -n '__fish_use_subcommand' -a '${cmd}' -d '${cmd} command'`,

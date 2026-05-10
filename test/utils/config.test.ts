@@ -5,13 +5,13 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import yaml from "js-yaml";
 import { DEFAULT_CONFIG } from "../../src/schemas/config.ts";
-import type { MulchConfig } from "../../src/schemas/config.ts";
+import type { KuraConfig } from "../../src/schemas/config.ts";
 import {
   getConfigPath,
   getExpertiseDir,
   getExpertisePath,
-  getMulchDir,
-  initMulchDir,
+  getKuraDir,
+  initKuraDir,
   readConfig,
   validateDomainName,
   writeConfig,
@@ -21,7 +21,7 @@ describe("config utils", () => {
   let tmpDir: string;
 
   beforeEach(async () => {
-    tmpDir = await mkdtemp(join(tmpdir(), "mulch-test-"));
+    tmpDir = await mkdtemp(join(tmpdir(), "kura-test-"));
   });
 
   afterEach(async () => {
@@ -29,38 +29,38 @@ describe("config utils", () => {
   });
 
   describe("path helpers", () => {
-    it("getMulchDir returns .mulch under cwd", () => {
-      expect(getMulchDir("/some/path")).toBe("/some/path/.mulch");
+    it("getKuraDir returns .kura under cwd", () => {
+      expect(getKuraDir("/some/path")).toBe("/some/path/.kura");
     });
 
-    it("getConfigPath returns config file under .mulch", () => {
+    it("getConfigPath returns config file under .kura", () => {
       expect(getConfigPath("/some/path")).toBe(
-        "/some/path/.mulch/mulch.config.yaml",
+        "/some/path/.kura/kura.config.yaml",
       );
     });
 
-    it("getExpertiseDir returns expertise dir under .mulch", () => {
-      expect(getExpertiseDir("/some/path")).toBe("/some/path/.mulch/expertise");
+    it("getExpertiseDir returns expertise dir under .kura", () => {
+      expect(getExpertiseDir("/some/path")).toBe("/some/path/.kura/expertise");
     });
 
     it("getExpertisePath returns JSONL file for a domain", () => {
       expect(getExpertisePath("testing", "/some/path")).toBe(
-        "/some/path/.mulch/expertise/testing.jsonl",
+        "/some/path/.kura/expertise/testing.jsonl",
       );
     });
   });
 
-  describe("initMulchDir", () => {
-    it("creates .mulch directory structure", async () => {
-      await initMulchDir(tmpDir);
+  describe("initKuraDir", () => {
+    it("creates .kura directory structure", async () => {
+      await initKuraDir(tmpDir);
 
-      expect(existsSync(getMulchDir(tmpDir))).toBe(true);
+      expect(existsSync(getKuraDir(tmpDir))).toBe(true);
       expect(existsSync(getExpertiseDir(tmpDir))).toBe(true);
       expect(existsSync(getConfigPath(tmpDir))).toBe(true);
     });
 
     it("writes default config", async () => {
-      await initMulchDir(tmpDir);
+      await initKuraDir(tmpDir);
 
       const config = await readConfig(tmpDir);
       expect(config.version).toBe(DEFAULT_CONFIG.version);
@@ -69,14 +69,14 @@ describe("config utils", () => {
     });
 
     it("can be called twice without error", async () => {
-      await initMulchDir(tmpDir);
-      await expect(initMulchDir(tmpDir)).resolves.toBeUndefined();
+      await initKuraDir(tmpDir);
+      await expect(initKuraDir(tmpDir)).resolves.toBeUndefined();
     });
   });
 
   describe("readConfig", () => {
     it("reads a valid YAML config", async () => {
-      await initMulchDir(tmpDir);
+      await initKuraDir(tmpDir);
       const config = await readConfig(tmpDir);
 
       expect(config).toBeDefined();
@@ -166,7 +166,7 @@ describe("config utils", () => {
   describe("getExpertisePath with validation", () => {
     it("returns path for valid domain", () => {
       expect(getExpertisePath("testing", "/some/path")).toBe(
-        "/some/path/.mulch/expertise/testing.jsonl",
+        "/some/path/.kura/expertise/testing.jsonl",
       );
     });
 
@@ -179,23 +179,23 @@ describe("config utils", () => {
 
   describe("writeConfig", () => {
     it("writes valid YAML config", async () => {
-      await initMulchDir(tmpDir);
+      await initKuraDir(tmpDir);
 
-      const customConfig: MulchConfig = {
+      const customConfig: KuraConfig = {
         ...DEFAULT_CONFIG,
         domains: ["testing", "architecture"],
       };
       await writeConfig(customConfig, tmpDir);
 
       const rawContent = await readFile(getConfigPath(tmpDir), "utf-8");
-      const parsed = yaml.load(rawContent) as MulchConfig;
+      const parsed = yaml.load(rawContent) as KuraConfig;
       expect(parsed.domains).toEqual(["testing", "architecture"]);
     });
 
     it("roundtrips config correctly", async () => {
-      await initMulchDir(tmpDir);
+      await initKuraDir(tmpDir);
 
-      const customConfig: MulchConfig = {
+      const customConfig: KuraConfig = {
         ...DEFAULT_CONFIG,
         domains: ["frontend", "backend"],
         governance: { max_entries: 50, warn_entries: 75, hard_limit: 100 },

@@ -2,8 +2,8 @@
 # See: https://github.com/overstory/overstory
 
 project:
-  name: mulch
-  root: /home/liker2/projects/os-eco/mulch
+  name: kura
+  root: /home/liker2/projects/os-eco/kura
   canonicalBranch: main
   qualityGates:
     - name: Tests
@@ -33,7 +33,7 @@ taskTracker:
     readyLabel: ov-ready
     activeLabel: ov-active
     maxConcurrent: 5
-mulch:
+kura:
   enabled: true
   domains: []
   primeFormat: markdown

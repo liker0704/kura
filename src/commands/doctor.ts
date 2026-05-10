@@ -4,13 +4,13 @@ import { join } from "node:path";
 import Ajv from "ajv";
 import chalk from "chalk";
 import type { Command } from "commander";
-import type { MulchConfig } from "../schemas/config.ts";
+import type { KuraConfig } from "../schemas/config.ts";
 import { recordSchema } from "../schemas/record-schema.ts";
 import type { ExpertiseRecord } from "../schemas/record.ts";
 import {
   getExpertiseDir,
   getExpertisePath,
-  getMulchDir,
+  getKuraDir,
   readConfig,
   writeConfig,
 } from "../utils/config.ts";
@@ -40,12 +40,12 @@ interface DoctorCheck {
 
 async function checkConfig(cwd?: string): Promise<DoctorCheck> {
   try {
-    const mulchDir = getMulchDir(cwd);
-    if (!existsSync(mulchDir)) {
+    const kuraDir = getKuraDir(cwd);
+    if (!existsSync(kuraDir)) {
       return {
         name: "config",
         status: "fail",
-        message: "No .mulch/ directory found",
+        message: "No .kura/ directory found",
         fixable: false,
         details: [],
       };
@@ -70,7 +70,7 @@ async function checkConfig(cwd?: string): Promise<DoctorCheck> {
 }
 
 async function checkJsonlIntegrity(
-  config: MulchConfig,
+  config: KuraConfig,
   cwd?: string,
 ): Promise<DoctorCheck> {
   const details: string[] = [];
@@ -112,7 +112,7 @@ async function checkJsonlIntegrity(
 }
 
 async function checkSchemaValidation(
-  config: MulchConfig,
+  config: KuraConfig,
   cwd?: string,
 ): Promise<DoctorCheck> {
   const ajv = new Ajv();
@@ -164,7 +164,7 @@ async function checkSchemaValidation(
 }
 
 async function checkStaleRecords(
-  config: MulchConfig,
+  config: KuraConfig,
   cwd?: string,
 ): Promise<DoctorCheck> {
   const now = new Date();
@@ -203,7 +203,7 @@ async function checkStaleRecords(
 }
 
 async function checkOrphanedDomains(
-  config: MulchConfig,
+  config: KuraConfig,
   cwd?: string,
 ): Promise<DoctorCheck> {
   const expertiseDir = getExpertiseDir(cwd);
@@ -253,7 +253,7 @@ async function checkOrphanedDomains(
 }
 
 async function checkDuplicates(
-  config: MulchConfig,
+  config: KuraConfig,
   cwd?: string,
 ): Promise<DoctorCheck> {
   const details: string[] = [];
@@ -291,7 +291,7 @@ async function checkDuplicates(
 }
 
 async function checkLegacyOutcome(
-  config: MulchConfig,
+  config: KuraConfig,
   cwd?: string,
 ): Promise<DoctorCheck> {
   const details: string[] = [];
@@ -346,7 +346,7 @@ async function checkLegacyOutcome(
 }
 
 async function checkGovernance(
-  config: MulchConfig,
+  config: KuraConfig,
   cwd?: string,
 ): Promise<DoctorCheck> {
   const details: string[] = [];
@@ -423,13 +423,13 @@ async function checkUpdateAvailable(): Promise<DoctorCheck> {
     status: "warn",
     message: `Update available: ${current} → ${latest}`,
     fixable: false,
-    details: ["Run `mulch upgrade` to upgrade"],
+    details: ["Run `kura upgrade` to upgrade"],
   };
 }
 
 async function applyFixes(
   checks: DoctorCheck[],
-  config: MulchConfig,
+  config: KuraConfig,
   cwd?: string,
 ): Promise<string[]> {
   const fixed: string[] = [];
@@ -632,7 +632,7 @@ export function registerDoctorCommand(program: Command): void {
         if (jsonMode) {
           outputJson({ success: false, command: "doctor", checks, summary });
         } else {
-          if (!isQuiet()) console.log("Mulch Doctor");
+          if (!isQuiet()) console.log("Kura Doctor");
           console.error(`  ${icons.fail} ${chalk.red(configCheck.message)}`);
           if (!isQuiet()) console.log("\n0 passed, 0 warnings, 1 failed");
         }
@@ -672,7 +672,7 @@ export function registerDoctorCommand(program: Command): void {
           ...(options.fix && { fixed }),
         });
       } else {
-        if (!isQuiet()) console.log("Mulch Doctor");
+        if (!isQuiet()) console.log("Kura Doctor");
         for (const check of checks) {
           const icon =
             check.status === "pass"

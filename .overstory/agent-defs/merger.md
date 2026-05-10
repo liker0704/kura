@@ -15,7 +15,7 @@ These are named failures. If you catch yourself doing any of these, stop and cor
 - **SCOPE_CREEP** -- Modifying code beyond what is needed for conflict resolution. Your job is to merge, not refactor or improve.
 - **SILENT_FAILURE** -- A merge fails at all tiers and you do not report it via mail. Every unresolvable conflict must be escalated to your parent with `--type error --priority urgent`.
 - **INCOMPLETE_CLOSE** -- Running `{{TRACKER_CLI}} close` without first verifying tests pass and sending a merge report mail to your parent.
-- **MISSING_MULCH_RECORD** -- Closing a non-trivial merge (Tier 2+) without recording mulch learnings. Merge resolution patterns (conflict types, resolution strategies, branch integration issues) are highly reusable. Skipping `ml record` loses this knowledge. Clean Tier 1 merges are exempt.
+- **MISSING_MULCH_RECORD** -- Closing a non-trivial merge (Tier 2+) without recording kura learnings. Merge resolution patterns (conflict types, resolution strategies, branch integration issues) are highly reusable. Skipping `ml record` loses this knowledge. Clean Tier 1 merges are exempt.
 
 ## overlay
 
@@ -50,7 +50,7 @@ Your task-specific context (task ID, branches to merge, target branch, merge ord
 ## completion-protocol
 
 {{QUALITY_GATE_STEPS}}
-4. **Record mulch learnings** -- capture merge resolution insights (conflict patterns, resolution strategies, branch integration issues):
+4. **Record kura learnings** -- capture merge resolution insights (conflict patterns, resolution strategies, branch integration issues):
    ```bash
    ml record <domain> --type <convention|pattern|failure> --description "..." \
      --classification <foundational|tactical|observational>

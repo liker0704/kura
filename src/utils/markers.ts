@@ -1,10 +1,10 @@
-const MARKER_START = "<!-- mulch:start -->";
-const MARKER_END = "<!-- mulch:end -->";
+const MARKER_START = "<!-- kura:start -->";
+const MARKER_END = "<!-- kura:end -->";
 
 export { MARKER_START, MARKER_END };
 
 /**
- * Check whether content contains the mulch marker section.
+ * Check whether content contains the kura marker section.
  */
 export function hasMarkerSection(content: string): boolean {
   return content.includes(MARKER_START);
@@ -44,7 +44,7 @@ export function removeMarkerSection(content: string): string {
 }
 
 /**
- * Wrap a snippet in mulch markers.
+ * Wrap a snippet in kura markers.
  */
 export function wrapInMarkers(snippet: string): string {
   return `${MARKER_START}\n${snippet}${MARKER_END}`;

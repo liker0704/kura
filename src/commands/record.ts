@@ -265,9 +265,9 @@ Required fields per record type:
   guide        --name, --description (or [content])
 
 Batch recording examples:
-  mulch record cli --batch records.json
-  mulch record cli --batch records.json --dry-run
-  echo '[{"type":"convention","content":"test"}]' > batch.json && mulch record cli --batch batch.json
+  kura record cli --batch records.json
+  kura record cli --batch records.json --dry-run
+  echo '[{"type":"convention","content":"test"}]' > batch.json && kura record cli --batch batch.json
 `,
     )
     .action(

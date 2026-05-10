@@ -1,11 +1,11 @@
 export {
-  getMulchDir,
+  getKuraDir,
   getConfigPath,
   getExpertiseDir,
   getExpertisePath,
   readConfig,
   writeConfig,
-  initMulchDir,
+  initKuraDir,
 } from "./config.ts";
 
 export {

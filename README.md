@@ -1,32 +1,34 @@
-# Mulch
+# Kura
+
+Forked from jayminwest/mulch under MIT License.
 
 Structured expertise management for AI agent workflows.
 
-[![npm](https://img.shields.io/npm/v/@os-eco/mulch-cli)](https://www.npmjs.com/package/@os-eco/mulch-cli)
-[![CI](https://github.com/jayminwest/mulch/actions/workflows/ci.yml/badge.svg)](https://github.com/jayminwest/mulch/actions/workflows/ci.yml)
+[![npm](https://img.shields.io/npm/v/@hana/kura-cli)](https://www.npmjs.com/package/@hana/kura-cli)
+[![CI](https://github.com/jayminwest/kura/actions/workflows/ci.yml/badge.svg)](https://github.com/jayminwest/kura/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-Agents start every session from zero. The pattern your agent discovered yesterday is forgotten today. Mulch fixes this: agents call `ml record` to write learnings, and `ml query` to read them. Expertise compounds across sessions, domains, and teammates.
+Agents start every session from zero. The pattern your agent discovered yesterday is forgotten today. Kura fixes this: agents call `ml record` to write learnings, and `ml query` to read them. Expertise compounds across sessions, domains, and teammates.
 
-**Mulch is a passive layer.** It does not contain an LLM. Agents use Mulch — Mulch does not use agents.
+**Kura is a passive layer.** It does not contain an LLM. Agents use Kura — Kura does not use agents.
 
 ## Install
 
 ```bash
-bun install -g @os-eco/mulch-cli
+bun install -g @hana/kura-cli
 ```
 
 Or try without installing:
 
 ```bash
-npx @os-eco/mulch-cli --help
+npx @hana/kura-cli --help
 ```
 
 ### Development
 
 ```bash
-git clone https://github.com/jayminwest/mulch
-cd mulch
+git clone https://github.com/jayminwest/kura
+cd kura
 bun install
 bun link              # Makes 'ml' available globally
 
@@ -38,7 +40,7 @@ bun run typecheck     # tsc --noEmit
 ## Quick Start
 
 ```bash
-ml init                                            # Create .mulch/ in your project
+ml init                                            # Create .kura/ in your project
 ml add database                                    # Add a domain
 ml record database --type convention "Use WAL mode for SQLite"
 ml record database --type failure \
@@ -55,7 +57,7 @@ Every command supports `--json` for structured output. Global flags: `-v`/`--ver
 
 | Command | Description |
 |---------|-------------|
-| `ml init` | Initialize `.mulch/` in the current project |
+| `ml init` | Initialize `.kura/` in the current project |
 | `ml add <domain>` | Add a new expertise domain |
 | `ml record <domain> --type <type>` | Record an expertise record (`--tags`, `--force`, `--relates-to`, `--supersedes`, `--batch`, `--stdin`, `--dry-run`, `--evidence-bead`) |
 | `ml edit <domain> <id>` | Edit an existing record by ID or 1-based index |
@@ -72,37 +74,37 @@ Every command supports `--json` for structured output. Global flags: `-v`/`--ver
 | `ml onboard` | Generate AGENTS.md/CLAUDE.md snippet |
 | `ml prune` | Remove stale tactical/observational entries |
 | `ml ready` | Show recently added or updated records (`--since`, `--domain`, `--limit`) |
-| `ml sync` | Validate, stage, and commit `.mulch/` changes |
+| `ml sync` | Validate, stage, and commit `.kura/` changes |
 | `ml outcome <domain> <id>` | Append an outcome to a record (`--status`, `--duration`, `--agent`, `--notes`), or view outcomes |
-| `ml upgrade` | Upgrade mulch to the latest version (`--check` for dry run) |
+| `ml upgrade` | Upgrade kura to the latest version (`--check` for dry run) |
 | `ml learn` | Show changed files and suggest domains for recording learnings |
 | `ml completions <shell>` | Output shell completion script (bash, zsh, fish) |
 
 ## Architecture
 
-Mulch stores expertise as typed JSONL records in `.mulch/expertise/<domain>.jsonl` — one file per domain, one record per line. Six record types (convention, pattern, failure, decision, reference, guide) with three classification tiers (foundational, tactical, observational) govern shelf life and pruning. Advisory file locks and atomic writes ensure safe concurrent access from multiple agents. Schema validation (via Ajv) enforces type-specific required fields. See [CLAUDE.md](CLAUDE.md) for full technical details.
+Kura stores expertise as typed JSONL records in `.kura/expertise/<domain>.jsonl` — one file per domain, one record per line. Six record types (convention, pattern, failure, decision, reference, guide) with three classification tiers (foundational, tactical, observational) govern shelf life and pruning. Advisory file locks and atomic writes ensure safe concurrent access from multiple agents. Schema validation (via Ajv) enforces type-specific required fields. See [CLAUDE.md](CLAUDE.md) for full technical details.
 
 ## How It Works
 
 ```
-1. ml init               → Creates .mulch/ with domain JSONL files
+1. ml init               → Creates .kura/ with domain JSONL files
 2. Agent reads expertise     → Grounded in everything the project has learned
 3. Agent does work           → Normal task execution
-4. Agent records insights    → Before finishing, writes learnings back to .mulch/
+4. Agent records insights    → Before finishing, writes learnings back to .kura/
 5. git push                  → Teammates' agents get smarter too
 ```
 
-The critical insight: step 4 is **agent-driven**. Before completing a task, the agent reviews its work for insights worth preserving and calls `ml record`. Mulch provides the schema and file structure so those learnings land in a consistent, queryable format.
+The critical insight: step 4 is **agent-driven**. Before completing a task, the agent reviews its work for insights worth preserving and calls `ml record`. Kura provides the schema and file structure so those learnings land in a consistent, queryable format.
 
-## What's in `.mulch/`
+## What's in `.kura/`
 
 ```
-.mulch/
+.kura/
 ├── expertise/
 │   ├── database.jsonl        # All database knowledge
 │   ├── api.jsonl             # One JSONL file per domain
 │   └── testing.jsonl         # Each line is a typed, structured record
-└── mulch.config.yaml         # Config: domains, governance settings
+└── kura.config.yaml         # Config: domains, governance settings
 ```
 
 Everything is git-tracked. Clone a repo and your agents immediately have the project's accumulated expertise.
@@ -141,15 +143,15 @@ $ ml query database
 
 ## Design Principles
 
-- **Zero LLM dependency** — Mulch makes no LLM calls. Quality equals agent quality.
+- **Zero LLM dependency** — Kura makes no LLM calls. Quality equals agent quality.
 - **Provider-agnostic** — Any agent with bash access can call the CLI.
-- **Git-native** — Everything lives in `.mulch/`, tracked in version control.
+- **Git-native** — Everything lives in `.kura/`, tracked in version control.
 - **Append-only JSONL** — Zero merge conflicts, trivial schema validation.
 - **Storage != Delivery** — JSONL on disk, optimized markdown/XML for agents.
 
 ## Concurrency & Multi-Agent Safety
 
-Mulch is designed for multi-agent workflows where several agents record expertise concurrently against the same repository.
+Kura is designed for multi-agent workflows where several agents record expertise concurrently against the same repository.
 
 ### How it works
 
@@ -218,7 +220,7 @@ The `--apply`, default (non-dry-run), and `--fix` variants acquire locks and are
 
 ## Programmatic API
 
-Mulch exports both low-level utilities and a high-level programmatic API:
+Kura exports both low-level utilities and a high-level programmatic API:
 
 ```typescript
 // High-level API — recommended for most use cases
@@ -228,14 +230,14 @@ import {
   queryDomain,       // Query all records for a domain
   editRecord,        // Edit an existing record by ID
   appendOutcome,     // Append an outcome to a record (with locking)
-} from "@os-eco/mulch-cli";
+} from "@hana/kura-cli";
 
 // Scoring utilities
 import {
   computeConfirmationScore,
   sortByConfirmationScore,
   getSuccessRate,
-} from "@os-eco/mulch-cli";
+} from "@hana/kura-cli";
 
 // Low-level utilities
 import {
@@ -248,14 +250,14 @@ import {
   findDuplicate,
   generateRecordId,
   recordSchema,
-} from "@os-eco/mulch-cli";
+} from "@hana/kura-cli";
 ```
 
 Types (`ExpertiseRecord`, `MulchConfig`, `RecordType`, `Classification`, `ScoredRecord`, `Outcome`, `RecordOptions`, `RecordResult`, `SearchOptions`, `SearchResult`, `QueryOptions`, `EditOptions`, `RecordUpdates`, `OutcomeOptions`, `AppendOutcomeResult`, etc.) are also exported.
 
 ## Part of os-eco
 
-Mulch is part of the [os-eco](https://github.com/jayminwest/os-eco) AI agent tooling ecosystem.
+Kura is part of the [os-eco](https://github.com/jayminwest/os-eco) AI agent tooling ecosystem.
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/jayminwest/os-eco/main/branding/logo.png" alt="os-eco" width="444" />

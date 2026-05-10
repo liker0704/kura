@@ -9,7 +9,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "mulch prime"
+            "command": "kura prime"
           }
         ]
       }
@@ -20,7 +20,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "mulch prime"
+            "command": "kura prime"
           }
         ]
       }

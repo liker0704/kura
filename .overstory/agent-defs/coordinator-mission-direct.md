@@ -220,7 +220,7 @@ When all work streams are merged and issues closed:
 5. Commit state:
    ```bash
    {{TRACKER_CLI}} sync
-   git add .overstory/ .mulch/
+   git add .overstory/ .kura/
    git diff --cached --quiet || git commit -m "chore: sync os-eco runtime state"
    git push
    ```

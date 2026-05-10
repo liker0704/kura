@@ -63,7 +63,7 @@ Your task-specific context (task ID, file scope, spec path, branch name, parent 
    - No syntax errors in test files (test runner can parse and attempt to run them).
    Run: `bun test <your-test-files>` and confirm new tests fail. Run `bun test` and confirm existing tests still pass.
 5. **Commit your scoped files** to your worktree branch: `git add <files> && git commit -m "<summary>"`.
-6. **Record mulch learnings** -- review your work for insights worth preserving:
+6. **Record kura learnings** -- review your work for insights worth preserving:
    ```bash
    ml record <domain> --type <convention|pattern|failure|decision> --description "..." \
      --classification <foundational|tactical|observational> \

@@ -8,7 +8,7 @@ import { DEFAULT_CONFIG } from "../../src/schemas/config.ts";
 import type { ExpertiseRecord } from "../../src/schemas/record.ts";
 import {
   getExpertisePath,
-  initMulchDir,
+  initKuraDir,
   writeConfig,
 } from "../../src/utils/config.ts";
 import {
@@ -30,8 +30,8 @@ describe("search command", () => {
   let tmpDir: string;
 
   beforeEach(async () => {
-    tmpDir = await mkdtemp(join(tmpdir(), "mulch-search-test-"));
-    await initMulchDir(tmpDir);
+    tmpDir = await mkdtemp(join(tmpdir(), "kura-search-test-"));
+    await initKuraDir(tmpDir);
     await writeConfig(
       { ...DEFAULT_CONFIG, domains: ["database", "api"] },
       tmpDir,
@@ -855,7 +855,7 @@ describe("search command", () => {
     function makeProgram(): Command {
       const program = new Command();
       program
-        .name("mulch")
+        .name("kura")
         .option("--json", "output as structured JSON")
         .exitOverride();
       registerSearchCommand(program);
@@ -869,7 +869,7 @@ describe("search command", () => {
         const program = makeProgram();
         await program.parseAsync([
           "node",
-          "mulch",
+          "kura",
           "search",
           "--domain",
           "nonexistent",
@@ -879,10 +879,10 @@ describe("search command", () => {
         expect(errorSpy).toHaveBeenCalledTimes(2);
         expect(errorSpy.mock.calls[0][0] as string).toContain("nonexistent");
         expect(errorSpy.mock.calls[1][0] as string).toContain(
-          "mulch add nonexistent",
+          "kura add nonexistent",
         );
         expect(errorSpy.mock.calls[1][0] as string).toContain(
-          ".mulch/mulch.config.yaml",
+          ".kura/kura.config.yaml",
         );
       } finally {
         errorSpy.mockRestore();
@@ -905,7 +905,7 @@ describe("search command", () => {
     function makeProgram(): Command {
       const program = new Command();
       program
-        .name("mulch")
+        .name("kura")
         .option("--json", "output as structured JSON")
         .exitOverride();
       registerSearchCommand(program);
@@ -928,7 +928,7 @@ describe("search command", () => {
         const program = makeProgram();
         await program.parseAsync([
           "node",
-          "mulch",
+          "kura",
           "search",
           "Compact search test",
           "--format",
@@ -966,7 +966,7 @@ describe("search command", () => {
         const program = makeProgram();
         await program.parseAsync([
           "node",
-          "mulch",
+          "kura",
           "search",
           "ids format search test",
           "--format",
@@ -1005,7 +1005,7 @@ describe("search command", () => {
         const program = makeProgram();
         await program.parseAsync([
           "node",
-          "mulch",
+          "kura",
           "search",
           "skiptest",
           "--format",
@@ -1027,7 +1027,7 @@ describe("search command", () => {
       const logSpy = spyOn(console, "log").mockImplementation(() => {});
       try {
         const program = makeProgram();
-        await program.parseAsync(["node", "mulch", "search", "WAL"]);
+        await program.parseAsync(["node", "kura", "search", "WAL"]);
 
         expect(logSpy).toHaveBeenCalledTimes(2); // output + match count
         const output = logSpy.mock.calls[0][0] as string;

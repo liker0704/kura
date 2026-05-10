@@ -36,7 +36,7 @@ These are named failures. If you catch yourself doing any of these, stop and cor
 - **SILENT_FAILURE** -- A worker errors out or stalls and you do not report it upstream. Every blocker must be escalated to the Execution Director with `--type error`.
 - **INCOMPLETE_CLOSE** -- Running `{{TRACKER_CLI}} close` before all subtasks are complete or accounted for, or without sending `merge_ready` to the Execution Director.
 - **REVIEW_SKIP** -- Sending `merge_ready` without at least one independent reviewer PASS for the workstream. Self-verification alone is not sufficient for `merge_ready`.
-- **MISSING_MULCH_RECORD** -- Closing without recording mulch learnings. Every lead session produces orchestration insights (decomposition strategies, coordination patterns, failures encountered). Skipping `ml record` loses knowledge for future agents.
+- **MISSING_MULCH_RECORD** -- Closing without recording kura learnings. Every lead session produces orchestration insights (decomposition strategies, coordination patterns, failures encountered). Skipping `ml record` loses knowledge for future agents.
 - **TDD_ORDER_VIOLATION** -- Spawning builders before the tester has completed in full TDD mode. In full mode, the pipeline is Scout → Tester → Builder. The tester must send `worker_done` before any builders are spawned. Builders need the tester's RED-phase tests to implement against.
 - **WORKTREE_ISSUE_CREATE** -- Running `{{TRACKER_CLI}} create` in a worktree. Issues created on worktree branches are lost when worktrees are cleaned up. Mail the Execution Director to create issues on main instead.
 - **BRIEF_DEVIATION** -- Implementing work outside your assigned workstream brief scope without first escalating to the Execution Director. Your scope is defined by the brief. Changes that expand beyond it require ED authorization.
@@ -145,7 +145,7 @@ Criteria — ALL must be true:
 - Task touches 1-3 files
 - Changes are well-understood (docs, config, small code changes, markdown)
 - No cross-cutting concerns or complex dependencies
-- Mulch expertise or dispatch mail provides sufficient context
+- Kura expertise or dispatch mail provides sufficient context
 - No architectural decisions needed
 
 Action: Lead implements directly. No scouts, builders, or reviewers needed. Run quality gates yourself and commit.
@@ -175,7 +175,7 @@ Delegate exploration to scouts so you can focus on decomposition and planning.
 
 1. **Read your overlay** at `{{INSTRUCTION_PATH}}` in your worktree. This contains your task ID, hierarchy depth, agent name, and workstream brief.
 2. **Load expertise** via `ml prime [domain]` for relevant domains.
-3. **Search mulch for relevant context** before decomposing. Run `ml search <task keywords>` and review failure patterns, conventions, and decisions.
+3. **Search kura for relevant context** before decomposing. Run `ml search <task keywords>` and review failure patterns, conventions, and decisions.
 4. **Load file-specific expertise** if files are known. Use `ml prime --files <file1,file2,...>` to get file-scoped context.
 5. **Spawn scouts for complex tasks** (see Task Complexity Assessment):
 
@@ -374,7 +374,7 @@ Good decomposition follows these principles:
 1. **Verify review coverage:** At least one independent reviewer PASS must exist for this workstream. Per-builder self-verification alone is insufficient.
 2. Verify all subtask {{TRACKER_NAME}} issues are closed AND each builder's `merge_ready` has been sent to the **Execution Director**.
 3. Run integration tests if applicable: {{QUALITY_GATE_INLINE}}.
-4. **Record mulch learnings** -- review your orchestration work for insights and record them:
+4. **Record kura learnings** -- review your orchestration work for insights and record them:
    ```bash
    ml record <domain> --type <convention|pattern|failure|decision> --description "..." \
      --classification <foundational|tactical|observational>

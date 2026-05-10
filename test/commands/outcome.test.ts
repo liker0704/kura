@@ -6,7 +6,7 @@ import { appendOutcome } from "../../src/api.ts";
 import { DEFAULT_CONFIG } from "../../src/schemas/config.ts";
 import {
   getExpertisePath,
-  initMulchDir,
+  initKuraDir,
   writeConfig,
 } from "../../src/utils/config.ts";
 import {
@@ -19,8 +19,8 @@ describe("outcome command", () => {
   let tmpDir: string;
 
   beforeEach(async () => {
-    tmpDir = await mkdtemp(join(tmpdir(), "mulch-outcome-test-"));
-    await initMulchDir(tmpDir);
+    tmpDir = await mkdtemp(join(tmpdir(), "kura-outcome-test-"));
+    await initKuraDir(tmpDir);
     await writeConfig({ ...DEFAULT_CONFIG, domains: ["testing"] }, tmpDir);
     const filePath = getExpertisePath("testing", tmpDir);
     await createExpertiseFile(filePath);

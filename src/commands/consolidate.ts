@@ -309,7 +309,7 @@ async function handleAnalyze(
     if (result.noOutcomeCount > 0 && !isQuiet()) {
       console.log(
         chalk.yellow(
-          `  Warning: No outcome data for ${result.noOutcomeCount} records. Use mulch outcome to track confirmation.`,
+          `  Warning: No outcome data for ${result.noOutcomeCount} records. Use kura outcome to track confirmation.`,
         ),
       );
     }
@@ -319,7 +319,7 @@ async function handleAnalyze(
     if (result.after > config2.governance.warn_entries && !isQuiet()) {
       console.log(
         chalk.dim(
-          `  Hint: Domain still has ${result.after} records after consolidation. Consider running mulch compact.`,
+          `  Hint: Domain still has ${result.after} records after consolidation. Consider running kura compact.`,
         ),
       );
     }
@@ -446,7 +446,7 @@ async function handleAuto(
       for (const w of result.warnings) {
         console.log(
           chalk.yellow(
-            `  Warning: ${w}. Use mulch outcome to track confirmation.`,
+            `  Warning: ${w}. Use kura outcome to track confirmation.`,
           ),
         );
       }

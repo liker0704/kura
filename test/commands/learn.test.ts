@@ -6,7 +6,7 @@ import { matchFilesToDomains } from "../../src/commands/learn.ts";
 import { DEFAULT_CONFIG } from "../../src/schemas/config.ts";
 import {
   getExpertisePath,
-  initMulchDir,
+  initKuraDir,
   writeConfig,
 } from "../../src/utils/config.ts";
 import {
@@ -18,8 +18,8 @@ describe("learn command", () => {
   let tmpDir: string;
 
   beforeEach(async () => {
-    tmpDir = await mkdtemp(join(tmpdir(), "mulch-learn-test-"));
-    await initMulchDir(tmpDir);
+    tmpDir = await mkdtemp(join(tmpdir(), "kura-learn-test-"));
+    await initKuraDir(tmpDir);
   });
 
   afterEach(async () => {

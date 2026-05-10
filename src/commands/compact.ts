@@ -255,11 +255,11 @@ async function handleAnalyze(
   console.log(chalk.dim("To compact manually:"));
   console.log(
     chalk.dim(
-      "  mulch compact <domain> --apply --records <ids> --type <type> [fields...]",
+      "  kura compact <domain> --apply --records <ids> --type <type> [fields...]",
     ),
   );
   console.log(chalk.dim("\nTo compact automatically:"));
-  console.log(chalk.dim("  mulch compact --auto [--dry-run]"));
+  console.log(chalk.dim("  kura compact --auto [--dry-run]"));
 }
 
 async function handleAuto(

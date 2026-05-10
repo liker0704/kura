@@ -1,5 +1,5 @@
 name: Bug Report
-description: Report a bug in mulch-cli
+description: Report a bug in kura-cli
 labels: ["bug"]
 body:
   - type: textarea
@@ -8,7 +8,7 @@ body:
       label: Steps to reproduce
       description: What did you do?
       placeholder: |
-        1. Run `mulch record ...`
+        1. Run `kura record ...`
         2. ...
     validations:
       required: true
@@ -30,10 +30,10 @@ body:
       required: true
 
   - type: input
-    id: mulch-version
+    id: kura-version
     attributes:
-      label: mulch version
-      description: Output of `mulch --version`
+      label: kura version
+      description: Output of `kura --version`
       placeholder: "0.5.0"
     validations:
       required: true

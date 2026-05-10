@@ -7,7 +7,7 @@ import { registerEditCommand } from "../../src/commands/edit.ts";
 import { DEFAULT_CONFIG } from "../../src/schemas/config.ts";
 import {
   getExpertisePath,
-  initMulchDir,
+  initKuraDir,
   writeConfig,
 } from "../../src/utils/config.ts";
 import {
@@ -20,8 +20,8 @@ describe("edit command", () => {
   let tmpDir: string;
 
   beforeEach(async () => {
-    tmpDir = await mkdtemp(join(tmpdir(), "mulch-edit-test-"));
-    await initMulchDir(tmpDir);
+    tmpDir = await mkdtemp(join(tmpdir(), "kura-edit-test-"));
+    await initKuraDir(tmpDir);
     await writeConfig({ ...DEFAULT_CONFIG, domains: ["testing"] }, tmpDir);
     const filePath = getExpertisePath("testing", tmpDir);
     await createExpertiseFile(filePath);
@@ -340,7 +340,7 @@ async function runEdit(
     program.option("--json", "output JSON");
     program.exitOverride();
     registerEditCommand(program);
-    await program.parseAsync(["node", "mulch", "edit", ...args]);
+    await program.parseAsync(["node", "kura", "edit", ...args]);
   } catch {
     // ignore commander exitOverride
   } finally {
@@ -364,8 +364,8 @@ describe("edit command -- new field flags", () => {
   let tmpDir: string;
 
   beforeEach(async () => {
-    tmpDir = await mkdtemp(join(tmpdir(), "mulch-edit-flags-test-"));
-    await initMulchDir(tmpDir);
+    tmpDir = await mkdtemp(join(tmpdir(), "kura-edit-flags-test-"));
+    await initKuraDir(tmpDir);
     await writeConfig({ ...DEFAULT_CONFIG, domains: ["testing"] }, tmpDir);
     const filePath = getExpertisePath("testing", tmpDir);
     await createExpertiseFile(filePath);

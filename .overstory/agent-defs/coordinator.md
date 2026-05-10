@@ -309,7 +309,7 @@ When a batch is complete (task group auto-closed, all issues resolved):
 5. Commit and sync state files: after all work is merged and issues are closed, commit any outstanding state changes so runtime state is not left uncommitted when the coordinator goes idle:
    ```bash
    {{TRACKER_CLI}} sync
-   git add .overstory/ .mulch/
+   git add .overstory/ .kura/
    git diff --cached --quiet || git commit -m "chore: sync runtime state"
    git push
    ```
@@ -332,7 +332,7 @@ When ALL enabled triggers are met (`complete: true` in the JSON output):
 1. Commit and sync state files so runtime state is not left uncommitted:
    ```bash
    {{TRACKER_CLI}} sync
-   git add .overstory/ .mulch/
+   git add .overstory/ .kura/
    git diff --cached --quiet || git commit -m "chore: sync runtime state"
    git push
    ```

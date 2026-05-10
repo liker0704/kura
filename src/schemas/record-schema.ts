@@ -5,8 +5,8 @@ const linkArray = {
 
 export const recordSchema = {
   $schema: "http://json-schema.org/draft-07/schema#",
-  title: "Mulch Expertise Record",
-  description: "A single expertise record in a Mulch domain file",
+  title: "Kura Expertise Record",
+  description: "A single expertise record in a Kura domain file",
   type: "object",
   definitions: {
     classification: {

@@ -3,7 +3,7 @@ import chalk from "chalk";
 import type { Command } from "commander";
 import {
   getExpertisePath,
-  getMulchDir,
+  getKuraDir,
   readConfig,
   writeConfig,
 } from "../utils/config.ts";
@@ -17,17 +17,17 @@ export function registerAddCommand(program: Command): void {
     .description("Add a new expertise domain")
     .action(async (domain: string) => {
       const jsonMode = program.opts().json === true;
-      const mulchDir = getMulchDir();
+      const kuraDir = getKuraDir();
 
-      if (!existsSync(mulchDir)) {
+      if (!existsSync(kuraDir)) {
         if (jsonMode) {
           outputJsonError(
             "add",
-            "No .mulch/ directory found. Run `mulch init` first.",
+            "No .kura/ directory found. Run `kura init` first.",
           );
         } else {
           console.error(
-            chalk.red("No .mulch/ directory found. Run `mulch init` first."),
+            chalk.red("No .kura/ directory found. Run `kura init` first."),
           );
         }
         process.exitCode = 1;

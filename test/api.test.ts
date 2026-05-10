@@ -20,7 +20,7 @@ import { DEFAULT_CONFIG } from "../src/schemas/config.ts";
 import type { ExpertiseRecord } from "../src/schemas/record.ts";
 import {
   getExpertisePath,
-  initMulchDir,
+  initKuraDir,
   writeConfig,
 } from "../src/utils/config.ts";
 import { appendRecord, createExpertiseFile } from "../src/utils/expertise.ts";
@@ -29,8 +29,8 @@ describe("programmatic API", () => {
   let tmpDir: string;
 
   beforeEach(async () => {
-    tmpDir = await mkdtemp(join(tmpdir(), "mulch-api-test-"));
-    await initMulchDir(tmpDir);
+    tmpDir = await mkdtemp(join(tmpdir(), "kura-api-test-"));
+    await initKuraDir(tmpDir);
     await writeConfig(
       { ...DEFAULT_CONFIG, domains: ["testing", "architecture"] },
       tmpDir,

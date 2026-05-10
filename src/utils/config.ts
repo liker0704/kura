@@ -2,49 +2,49 @@ import { existsSync } from "node:fs";
 import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import yaml from "js-yaml";
-import type { MulchConfig } from "../schemas/config.ts";
+import type { KuraConfig } from "../schemas/config.ts";
 import { DEFAULT_CONFIG } from "../schemas/config.ts";
 import { createExpertiseFile } from "./expertise.ts";
 
-const MULCH_DIR = ".mulch";
-const CONFIG_FILE = "mulch.config.yaml";
+const KURA_DIR = ".kura";
+const CONFIG_FILE = "kura.config.yaml";
 const EXPERTISE_DIR = "expertise";
 
-export const GITATTRIBUTES_LINE = ".mulch/expertise/*.jsonl merge=union";
+export const GITATTRIBUTES_LINE = ".kura/expertise/*.jsonl merge=union";
 
-export const MULCH_README = `# .mulch/
+export const KURA_README = `# .kura/
 
-This directory is managed by [mulch](https://github.com/jayminwest/mulch) — a structured expertise layer for coding agents.
+This directory is managed by [kura](https://github.com/jayminwest/kura) — a structured expertise layer for coding agents.
 
 ## Key Commands
 
-- \`mulch init\`      — Initialize a .mulch directory
-- \`mulch add\`       — Add a new domain
-- \`mulch record\`    — Record an expertise record
-- \`mulch edit\`      — Edit an existing record
-- \`mulch query\`     — Query expertise records
-- \`mulch prime [domain]\` — Output a priming prompt (optionally scoped to one domain)
-- \`mulch search\`   — Search records across domains
-- \`mulch status\`    — Show domain statistics
-- \`mulch validate\`  — Validate all records against the schema
-- \`mulch prune\`     — Remove expired records
+- \`kura init\`      — Initialize a .kura directory
+- \`kura add\`       — Add a new domain
+- \`kura record\`    — Record an expertise record
+- \`kura edit\`      — Edit an existing record
+- \`kura query\`     — Query expertise records
+- \`kura prime [domain]\` — Output a priming prompt (optionally scoped to one domain)
+- \`kura search\`   — Search records across domains
+- \`kura status\`    — Show domain statistics
+- \`kura validate\`  — Validate all records against the schema
+- \`kura prune\`     — Remove expired records
 
 ## Structure
 
-- \`mulch.config.yaml\` — Configuration file
+- \`kura.config.yaml\` — Configuration file
 - \`expertise/\`        — JSONL files, one per domain
 `;
 
-export function getMulchDir(cwd: string = process.cwd()): string {
-  return join(cwd, MULCH_DIR);
+export function getKuraDir(cwd: string = process.cwd()): string {
+  return join(cwd, KURA_DIR);
 }
 
 export function getConfigPath(cwd: string = process.cwd()): string {
-  return join(getMulchDir(cwd), CONFIG_FILE);
+  return join(getKuraDir(cwd), CONFIG_FILE);
 }
 
 export function getExpertiseDir(cwd: string = process.cwd()): string {
-  return join(getMulchDir(cwd), EXPERTISE_DIR);
+  return join(getKuraDir(cwd), EXPERTISE_DIR);
 }
 
 export function validateDomainName(domain: string): void {
@@ -65,7 +65,7 @@ export function getExpertisePath(
 
 export async function readConfig(
   cwd: string = process.cwd(),
-): Promise<MulchConfig> {
+): Promise<KuraConfig> {
   const configPath = getConfigPath(cwd);
   let content: string;
   try {
@@ -73,12 +73,12 @@ export async function readConfig(
   } catch (err) {
     if ((err as NodeJS.ErrnoException).code === "ENOENT") {
       throw new Error(
-        "No .mulch/ directory found. Run `mulch init` to set up this project.",
+        "No .kura/ directory found. Run `kura init` to set up this project.",
       );
     }
     throw err;
   }
-  return yaml.load(content) as MulchConfig;
+  return yaml.load(content) as KuraConfig;
 }
 
 export async function addDomain(
@@ -116,7 +116,7 @@ export async function removeDomain(
 }
 
 export async function writeConfig(
-  config: MulchConfig,
+  config: KuraConfig,
   cwd: string = process.cwd(),
 ): Promise<void> {
   const configPath = getConfigPath(cwd);
@@ -124,10 +124,10 @@ export async function writeConfig(
   await writeFile(configPath, content, "utf-8");
 }
 
-export async function initMulchDir(cwd: string = process.cwd()): Promise<void> {
-  const mulchDir = getMulchDir(cwd);
+export async function initKuraDir(cwd: string = process.cwd()): Promise<void> {
+  const kuraDir = getKuraDir(cwd);
   const expertiseDir = getExpertiseDir(cwd);
-  await mkdir(mulchDir, { recursive: true });
+  await mkdir(kuraDir, { recursive: true });
   await mkdir(expertiseDir, { recursive: true });
 
   // Only write default config if none exists — preserve user customizations
@@ -154,9 +154,9 @@ export async function initMulchDir(cwd: string = process.cwd()): Promise<void> {
     );
   }
 
-  // Create .mulch/README.md if missing
-  const readmePath = join(mulchDir, "README.md");
+  // Create .kura/README.md if missing
+  const readmePath = join(kuraDir, "README.md");
   if (!existsSync(readmePath)) {
-    await writeFile(readmePath, MULCH_README, "utf-8");
+    await writeFile(readmePath, KURA_README, "utf-8");
   }
 }

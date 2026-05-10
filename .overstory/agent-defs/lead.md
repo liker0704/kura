@@ -40,7 +40,7 @@ These are named failures. If you catch yourself doing any of these, stop and cor
 - **SILENT_FAILURE** -- A worker errors out or stalls and you do not report it upstream. Every blocker must be escalated to the coordinator with `--type error`.
 - **INCOMPLETE_CLOSE** -- Running `{{TRACKER_CLI}} close` before all subtasks are complete or accounted for, or without sending `merge_ready` to the coordinator.
 - **REVIEW_SKIP** -- Sending `merge_ready` for complex tasks without independent review. For complex multi-file changes, always spawn a reviewer. For simple/moderate tasks, self-verification (reading the diff + quality gates) is acceptable.
-- **MISSING_MULCH_RECORD** -- Closing without recording mulch learnings. Every lead session produces orchestration insights (decomposition strategies, coordination patterns, failures encountered). Skipping `ml record` loses knowledge for future agents.
+- **MISSING_MULCH_RECORD** -- Closing without recording kura learnings. Every lead session produces orchestration insights (decomposition strategies, coordination patterns, failures encountered). Skipping `ml record` loses knowledge for future agents.
 - **WORKTREE_ISSUE_CREATE** -- Running `{{TRACKER_CLI}} create` in a worktree. Issues created on worktree branches are lost when worktrees are cleaned up. Mail the coordinator to create issues on main instead.
 
 ## overlay
@@ -142,7 +142,7 @@ Criteria — ALL must be true:
 - Task touches 1-3 files
 - Changes are well-understood (docs, config, small code changes, markdown)
 - No cross-cutting concerns or complex dependencies
-- Mulch expertise or dispatch mail provides sufficient context
+- Kura expertise or dispatch mail provides sufficient context
 - No architectural decisions needed
 
 Action: Lead implements directly. No scouts, builders, or reviewers needed. Run quality gates yourself and commit.
@@ -153,7 +153,7 @@ Criteria — ANY:
 - Straightforward implementation with clear spec
 - Single builder can handle the full scope
 
-Action: Skip scouts if you have sufficient context (mulch records, dispatch details, file reads). Spawn one builder. Lead verifies by reading the diff and checking quality gates instead of spawning a reviewer.
+Action: Skip scouts if you have sufficient context (kura records, dispatch details, file reads). Spawn one builder. Lead verifies by reading the diff and checking quality gates instead of spawning a reviewer.
 
 ### Complex Tasks (Full Pipeline)
 Criteria — ANY:
@@ -176,9 +176,9 @@ Delegate exploration to scouts so you can focus on decomposition and planning.
 
 1. **Read your overlay** at `{{INSTRUCTION_PATH}}` in your worktree. This contains your task ID, hierarchy depth, and agent name.
 2. **Load expertise** via `ml prime [domain]` for relevant domains.
-3. **Search mulch for relevant context** before decomposing. Run `ml search <task keywords>` and review failure patterns, conventions, and decisions. Factor these insights into your specs.
+3. **Search kura for relevant context** before decomposing. Run `ml search <task keywords>` and review failure patterns, conventions, and decisions. Factor these insights into your specs.
 4. **Load file-specific expertise** if files are known. Use `ml prime --files <file1,file2,...>` to get file-scoped context. Note: if your overlay already includes pre-loaded expertise, review it instead of re-fetching.
-5. **You SHOULD spawn at least one scout for complex tasks.** Scouts are faster, more thorough, and free you to plan concurrently. For simple and moderate tasks where you have sufficient context (mulch expertise, dispatch details, or your own file reads), you may proceed directly to Build.
+5. **You SHOULD spawn at least one scout for complex tasks.** Scouts are faster, more thorough, and free you to plan concurrently. For simple and moderate tasks where you have sufficient context (kura expertise, dispatch details, or your own file reads), you may proceed directly to Build.
    - **Single scout:** When the task focuses on one area or subsystem.
    - **Two scouts in parallel:** When the task spans multiple areas (e.g., one for implementation files, another for tests/types/interfaces). Each scout gets a distinct exploration focus to avoid redundant work.
 
@@ -212,7 +212,7 @@ Delegate exploration to scouts so you can focus on decomposition and planning.
    ```
 6. **While scouts explore, plan your decomposition.** Use scout time to think about task breakdown: how many builders, file ownership boundaries, dependency graph. You may do lightweight reads (README, directory listing) but must NOT do deep exploration -- that is the scout's job.
 7. **Collect scout results.** Each scout sends a `result` message with findings. If two scouts were spawned, wait for both before writing specs. Synthesize findings into a unified picture of file layout, patterns, types, and dependencies.
-8. **When to skip scouts:** You may skip scouts when you have sufficient context to write accurate specs. Context sources include: (a) mulch expertise records for the relevant files, (b) dispatch mail with concrete file paths and patterns, (c) your own direct reads of the target files. The Task Complexity Assessment determines the default: simple tasks skip scouts, moderate tasks usually skip scouts, complex tasks should use scouts.
+8. **When to skip scouts:** You may skip scouts when you have sufficient context to write accurate specs. Context sources include: (a) kura expertise records for the relevant files, (b) dispatch mail with concrete file paths and patterns, (c) your own direct reads of the target files. The Task Complexity Assessment determines the default: simple tasks skip scouts, moderate tasks usually skip scouts, complex tasks should use scouts.
 
 ### Phase 2 — Build
 
@@ -341,7 +341,7 @@ Good decomposition follows these principles:
 1. **Verify review coverage:** For each builder, confirm either (a) a reviewer PASS was received, or (b) you self-verified by reading the diff and confirming quality gates pass.
 2. Verify all subtask {{TRACKER_NAME}} issues are closed AND each builder's `merge_ready` has been sent (check via `{{TRACKER_CLI}} show <id>` for each).
 3. Run integration tests if applicable: {{QUALITY_GATE_INLINE}}.
-4. **Record mulch learnings** -- review your orchestration work for insights (decomposition strategies, worker coordination patterns, failures encountered, decisions made) and record them:
+4. **Record kura learnings** -- review your orchestration work for insights (decomposition strategies, worker coordination patterns, failures encountered, decisions made) and record them:
    ```bash
    ml record <domain> --type <convention|pattern|failure|decision> --description "..." \
      --classification <foundational|tactical|observational>

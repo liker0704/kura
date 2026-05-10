@@ -15,7 +15,7 @@ import {
 import type { DomainRecords } from "../../src/utils/budget.ts";
 import {
   getExpertisePath,
-  initMulchDir,
+  initKuraDir,
   readConfig,
   writeConfig,
 } from "../../src/utils/config.ts";
@@ -43,8 +43,8 @@ describe("prime command", () => {
   let tmpDir: string;
 
   beforeEach(async () => {
-    tmpDir = await mkdtemp(join(tmpdir(), "mulch-prime-test-"));
-    await initMulchDir(tmpDir);
+    tmpDir = await mkdtemp(join(tmpdir(), "kura-prime-test-"));
+    await initKuraDir(tmpDir);
   });
 
   afterEach(async () => {
@@ -53,9 +53,9 @@ describe("prime command", () => {
 
   it("generates prime output with no domains", () => {
     const output = formatPrimeOutput([]);
-    expect(output).toContain("# Project Expertise (via Mulch)");
+    expect(output).toContain("# Project Expertise (via Kura)");
     expect(output).toContain("No expertise recorded yet");
-    expect(output).toContain("mulch add <domain>");
+    expect(output).toContain("kura add <domain>");
   });
 
   it("generates prime output with a single domain", async () => {
@@ -75,7 +75,7 @@ describe("prime command", () => {
     const section = formatDomainExpertise("testing", records, lastUpdated);
     const output = formatPrimeOutput([section]);
 
-    expect(output).toContain("# Project Expertise (via Mulch)");
+    expect(output).toContain("# Project Expertise (via Kura)");
     expect(output).toContain("## testing");
     expect(output).toContain("Use vitest for all tests");
     expect(output).toContain("## Recording New Learnings");
@@ -125,7 +125,7 @@ describe("prime command", () => {
   it("prime output includes recording instructions", () => {
     const output = formatPrimeOutput([]);
     expect(output).toContain("## Recording New Learnings");
-    expect(output).toContain("mulch record <domain>");
+    expect(output).toContain("kura record <domain>");
   });
 
   it("prime output includes per-type required fields table", () => {
@@ -287,7 +287,7 @@ describe("prime command", () => {
     const section = formatDomainExpertisePlain("testing", records, lastUpdated);
     const output = formatPrimeOutputPlain([section]);
 
-    expect(output).toContain("Project Expertise (via Mulch)");
+    expect(output).toContain("Project Expertise (via Kura)");
     expect(output).toContain("[testing]");
     expect(output).toContain("Conventions:");
     expect(output).toMatch(/- \[mx-[0-9a-f]+\] Use vitest/);
@@ -1108,7 +1108,7 @@ describe("prime command", () => {
 
     it("compact wrapper omits verbose recording instructions", () => {
       const output = formatPrimeOutputCompact([]);
-      expect(output).toContain("# Project Expertise (via Mulch)");
+      expect(output).toContain("# Project Expertise (via Kura)");
       expect(output).toContain("No expertise recorded yet");
       expect(output).not.toContain("## Recording New Learnings");
     });
@@ -1116,13 +1116,13 @@ describe("prime command", () => {
     it("compact wrapper includes quick reference section", () => {
       const output = formatPrimeOutputCompact([]);
       expect(output).toContain("## Quick Reference");
-      expect(output).toContain('mulch search "query"');
-      expect(output).toContain("mulch prime --files");
-      expect(output).toContain("mulch prime --context");
-      expect(output).toContain("mulch record <domain>");
+      expect(output).toContain('kura search "query"');
+      expect(output).toContain("kura prime --files");
+      expect(output).toContain("kura prime --context");
+      expect(output).toContain("kura record <domain>");
       expect(output).toContain("--evidence-commit");
       expect(output).toContain("--evidence-bead");
-      expect(output).toContain("mulch doctor");
+      expect(output).toContain("kura doctor");
     });
 
     it("compact with multiple domains", async () => {
@@ -1644,9 +1644,9 @@ describe("prime command", () => {
       const reminder = getSessionEndReminder("markdown");
       // The reminder is appended by prime.ts, but verify the function itself
       expect(reminder).toContain("SESSION CLOSE PROTOCOL");
-      expect(reminder).toContain("mulch record");
-      expect(reminder).toContain("mulch sync");
-      expect(reminder).toContain("mulch learn");
+      expect(reminder).toContain("kura record");
+      expect(reminder).toContain("kura sync");
+      expect(reminder).toContain("kura learn");
       expect(reminder).toContain("NEVER skip this");
     });
 
@@ -1654,9 +1654,9 @@ describe("prime command", () => {
       const reminder = getSessionEndReminder("markdown");
       expect(reminder).toContain("# ");
       expect(reminder).toContain("**CRITICAL**");
-      expect(reminder).toContain("mulch record <domain>");
-      expect(reminder).toContain("mulch sync");
-      expect(reminder).toContain("mulch learn");
+      expect(reminder).toContain("kura record <domain>");
+      expect(reminder).toContain("kura sync");
+      expect(reminder).toContain("kura learn");
     });
 
     it("xml reminder uses XML tags", () => {
@@ -1664,9 +1664,9 @@ describe("prime command", () => {
       expect(reminder).toContain("<session_close_protocol");
       expect(reminder).toContain("</session_close_protocol>");
       expect(reminder).toContain("<checklist>");
-      expect(reminder).toContain("mulch record");
-      expect(reminder).toContain("mulch sync");
-      expect(reminder).toContain("mulch learn");
+      expect(reminder).toContain("kura record");
+      expect(reminder).toContain("kura sync");
+      expect(reminder).toContain("kura learn");
       expect(reminder).toContain("NEVER skip this");
     });
 
@@ -1677,9 +1677,9 @@ describe("prime command", () => {
       expect(reminder).not.toContain("##");
       // No XML tags (but <domain> and <type> placeholders are fine)
       expect(reminder).not.toContain("</");
-      expect(reminder).toContain("mulch record");
-      expect(reminder).toContain("mulch sync");
-      expect(reminder).toContain("mulch learn");
+      expect(reminder).toContain("kura record");
+      expect(reminder).toContain("kura sync");
+      expect(reminder).toContain("kura learn");
       expect(reminder).toContain("NEVER skip this");
     });
 
@@ -1705,9 +1705,9 @@ describe("prime command", () => {
     it("reminder contains key action items", () => {
       for (const format of ["markdown", "xml", "plain"] as const) {
         const reminder = getSessionEndReminder(format);
-        expect(reminder).toContain("mulch record");
-        expect(reminder).toContain("mulch sync");
-        expect(reminder).toContain("mulch learn");
+        expect(reminder).toContain("kura record");
+        expect(reminder).toContain("kura sync");
+        expect(reminder).toContain("kura learn");
       }
     });
   });
@@ -2053,7 +2053,7 @@ describe("prime command", () => {
       );
       const output = formatPrimeOutputCompact([section]);
 
-      expect(output).toContain("# Project Expertise (via Mulch)");
+      expect(output).toContain("# Project Expertise (via Kura)");
       expect(output).toContain("## testing");
     });
 
@@ -2191,7 +2191,7 @@ describe("prime command", () => {
     function makeProgram(): Command {
       const program = new Command();
       program
-        .name("mulch")
+        .name("kura")
         .option("--json", "output as structured JSON")
         .exitOverride();
       registerPrimeCommand(program);
@@ -2204,15 +2204,15 @@ describe("prime command", () => {
       const errorSpy = spyOn(console, "error").mockImplementation(() => {});
       try {
         const program = makeProgram();
-        await program.parseAsync(["node", "mulch", "prime", "nonexistent"]);
+        await program.parseAsync(["node", "kura", "prime", "nonexistent"]);
 
         expect(errorSpy).toHaveBeenCalledTimes(2);
         expect(errorSpy.mock.calls[0][0] as string).toContain("nonexistent");
         expect(errorSpy.mock.calls[1][0] as string).toContain(
-          "mulch add nonexistent",
+          "kura add nonexistent",
         );
         expect(errorSpy.mock.calls[1][0] as string).toContain(
-          ".mulch/mulch.config.yaml",
+          ".kura/kura.config.yaml",
         );
       } finally {
         errorSpy.mockRestore();
@@ -2227,7 +2227,7 @@ describe("prime command", () => {
         const program = makeProgram();
         await program.parseAsync([
           "node",
-          "mulch",
+          "kura",
           "prime",
           "--exclude-domain",
           "nonexistent",
@@ -2236,10 +2236,10 @@ describe("prime command", () => {
         expect(errorSpy).toHaveBeenCalledTimes(2);
         expect(errorSpy.mock.calls[0][0] as string).toContain("nonexistent");
         expect(errorSpy.mock.calls[1][0] as string).toContain(
-          "mulch add nonexistent",
+          "kura add nonexistent",
         );
         expect(errorSpy.mock.calls[1][0] as string).toContain(
-          ".mulch/mulch.config.yaml",
+          ".kura/kura.config.yaml",
         );
       } finally {
         errorSpy.mockRestore();
@@ -2262,7 +2262,7 @@ describe("prime command", () => {
     function makeProgram(): Command {
       const program = new Command();
       program
-        .name("mulch")
+        .name("kura")
         .option("--json", "output as structured JSON")
         .exitOverride();
       registerPrimeCommand(program);
@@ -2357,7 +2357,7 @@ describe("prime command", () => {
         const program = makeProgram();
         await program.parseAsync([
           "node",
-          "mulch",
+          "kura",
           "prime",
           "--audience",
           "builder",
@@ -2385,7 +2385,7 @@ describe("prime command", () => {
         const program = makeProgram();
         await program.parseAsync([
           "node",
-          "mulch",
+          "kura",
           "prime",
           "--exclude-audience",
           "builder",

@@ -12,12 +12,12 @@ export function getCurrentVersion(): string {
 }
 
 /**
- * Fetch the latest published version of mulch-cli from npm.
+ * Fetch the latest published version of kura-cli from npm.
  * Returns null if the registry is unreachable.
  */
 export function getLatestVersion(): string | null {
   try {
-    const result = execSync("npm view @os-eco/mulch-cli version", {
+    const result = execSync("npm view @hana/kura-cli version", {
       encoding: "utf-8",
       timeout: 10000,
       stdio: ["pipe", "pipe", "pipe"],

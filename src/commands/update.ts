@@ -7,9 +7,7 @@ export function registerUpdateCommand(program: Command): void {
     .description("Deprecated: use 'upgrade' instead")
     .option("--check", "only check for updates, do not install")
     .action(async () => {
-      printWarning(
-        "'mulch update' is deprecated. Use 'mulch upgrade' instead.",
-      );
+      printWarning("'kura update' is deprecated. Use 'kura upgrade' instead.");
       process.exitCode = 1;
     });
 }

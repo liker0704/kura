@@ -10,7 +10,7 @@ describe("onboard command", () => {
   let tmpDir: string;
 
   beforeEach(async () => {
-    tmpDir = await mkdtemp(join(tmpdir(), "mulch-onboard-test-"));
+    tmpDir = await mkdtemp(join(tmpdir(), "kura-onboard-test-"));
   });
 
   afterEach(async () => {
@@ -26,10 +26,10 @@ describe("onboard command", () => {
 
       expect(existsSync(join(tmpDir, "AGENTS.md"))).toBe(true);
       const content = await readFile(join(tmpDir, "AGENTS.md"), "utf-8");
-      expect(content).toContain("## Project Expertise (Mulch)");
-      expect(content).toContain("mulch prime");
-      expect(content).toContain("mulch record");
-      expect(content).toContain("mulch status");
+      expect(content).toContain("## Project Expertise (Kura)");
+      expect(content).toContain("kura prime");
+      expect(content).toContain("kura record");
+      expect(content).toContain("kura status");
       expect(content).toContain(MARKER_START);
       expect(content).toContain(MARKER_END);
     } finally {
@@ -48,7 +48,7 @@ describe("onboard command", () => {
 
       const content = await readFile(join(tmpDir, "CLAUDE.md"), "utf-8");
       expect(content).toContain("# Existing content");
-      expect(content).toContain("## Project Expertise (Mulch)");
+      expect(content).toContain("## Project Expertise (Kura)");
     } finally {
       consoleSpy.mockRestore();
     }
@@ -64,7 +64,7 @@ describe("onboard command", () => {
       const content = await readFile(join(tmpDir, "AGENTS.md"), "utf-8");
       expect(content).toContain("# My Project");
       expect(content).toContain("Some important info.");
-      expect(content).toContain("## Project Expertise (Mulch)");
+      expect(content).toContain("## Project Expertise (Kura)");
     } finally {
       consoleSpy.mockRestore();
     }
@@ -78,7 +78,7 @@ describe("onboard command", () => {
       await runOnboard({ cwd: tmpDir });
 
       const content = await readFile(join(tmpDir, "AGENTS.md"), "utf-8");
-      const matches = content.match(/## Project Expertise \(Mulch\)/g);
+      const matches = content.match(/## Project Expertise \(Kura\)/g);
       expect(matches).toHaveLength(1);
     } finally {
       consoleSpy.mockRestore();
@@ -95,7 +95,7 @@ describe("onboard command", () => {
       await runOnboard({ stdout: true, cwd: tmpDir });
 
       expect(stdoutSpy).toHaveBeenCalledWith(
-        expect.stringContaining("## Project Expertise (Mulch)"),
+        expect.stringContaining("## Project Expertise (Kura)"),
       );
       expect(existsSync(join(tmpDir, "AGENTS.md"))).toBe(false);
       expect(existsSync(join(tmpDir, "CLAUDE.md"))).toBe(false);
@@ -130,7 +130,7 @@ describe("onboard command", () => {
 
       const output = (stdoutSpy.mock.calls[0] as string[])[0];
       expect(output).toContain("At the start of every session");
-      expect(output).toContain("mulch prime");
+      expect(output).toContain("kura prime");
     } finally {
       stdoutSpy.mockRestore();
     }
@@ -149,7 +149,7 @@ describe("onboard command", () => {
 
       const output = (stdoutSpy.mock.calls[0] as string[])[0];
       expect(output).toContain("At the start of every session");
-      expect(output).toContain("mulch prime");
+      expect(output).toContain("kura prime");
     } finally {
       stdoutSpy.mockRestore();
     }
@@ -166,8 +166,8 @@ describe("onboard command", () => {
 
       const output = (stdoutSpy.mock.calls[0] as string[])[0];
       expect(output).toContain("Before You Finish");
-      expect(output).toContain("mulch learn");
-      expect(output).toContain("mulch sync");
+      expect(output).toContain("kura learn");
+      expect(output).toContain("kura sync");
     } finally {
       stdoutSpy.mockRestore();
     }
@@ -182,8 +182,8 @@ describe("onboard command", () => {
 
       const output = (stdoutSpy.mock.calls[0] as string[])[0];
       expect(output).toContain("Before You Finish");
-      expect(output).toContain("mulch learn");
-      expect(output).toContain("mulch sync");
+      expect(output).toContain("kura learn");
+      expect(output).toContain("kura sync");
     } finally {
       stdoutSpy.mockRestore();
     }
@@ -197,9 +197,9 @@ describe("onboard command", () => {
       await runOnboard({ stdout: true, cwd: tmpDir });
 
       const output = (stdoutSpy.mock.calls[0] as string[])[0];
-      expect(output).toContain("mulch prime");
-      expect(output).toContain("mulch record");
-      expect(output).toContain("mulch status");
+      expect(output).toContain("kura prime");
+      expect(output).toContain("kura record");
+      expect(output).toContain("kura status");
     } finally {
       stdoutSpy.mockRestore();
     }
@@ -209,7 +209,7 @@ describe("onboard command", () => {
 
   describe("marker-based update", () => {
     it("updates an existing marker-wrapped snippet when content changes", async () => {
-      const oldSnippet = `${MARKER_START}\n## Project Expertise (Mulch)\n\nOld content here.\n${MARKER_END}`;
+      const oldSnippet = `${MARKER_START}\n## Project Expertise (Kura)\n\nOld content here.\n${MARKER_END}`;
       await writeFile(
         join(tmpDir, "CLAUDE.md"),
         `# My Project\n\n${oldSnippet}\n`,
@@ -221,13 +221,13 @@ describe("onboard command", () => {
         await runOnboard({ cwd: tmpDir });
 
         const content = await readFile(join(tmpDir, "CLAUDE.md"), "utf-8");
-        expect(content).toContain("mulch prime");
+        expect(content).toContain("kura prime");
         expect(content).toContain(MARKER_START);
         expect(content).toContain(MARKER_END);
         expect(content).not.toContain("Old content here.");
         expect(content).toContain("# My Project");
         // Only one marker pair
-        const markerMatches = content.match(/<!-- mulch:start -->/g);
+        const markerMatches = content.match(/<!-- kura:start -->/g);
         expect(markerMatches).toHaveLength(1);
       } finally {
         consoleSpy.mockRestore();
@@ -278,7 +278,7 @@ describe("onboard command", () => {
         expect(content).toContain("Some intro text.");
         expect(content).toContain("## Other Section");
         expect(content).toContain("More content.");
-        expect(content).toContain("mulch prime");
+        expect(content).toContain("kura prime");
       } finally {
         consoleSpy.mockRestore();
       }
@@ -315,7 +315,7 @@ describe("onboard command", () => {
     });
 
     it("updates outdated section when version changes", async () => {
-      const oldContent = `# Project\n\n${MARKER_START}\n## Project Expertise (Mulch)\n<!-- mulch-onboard-v:0 -->\nold content\n${MARKER_END}\n`;
+      const oldContent = `# Project\n\n${MARKER_START}\n## Project Expertise (Kura)\n<!-- kura-onboard-v:0 -->\nold content\n${MARKER_END}\n`;
       await writeFile(join(tmpDir, "CLAUDE.md"), oldContent, "utf-8");
 
       const consoleSpy = spyOn(console, "log").mockImplementation(() => {});
@@ -325,7 +325,7 @@ describe("onboard command", () => {
         const content = await readFile(join(tmpDir, "CLAUDE.md"), "utf-8");
         expect(content).toContain("# Project");
         expect(content).toContain(VERSION_MARKER);
-        expect(content).not.toContain("mulch-onboard-v:0");
+        expect(content).not.toContain("kura-onboard-v:0");
         expect(content).not.toContain("old content");
       } finally {
         consoleSpy.mockRestore();
@@ -333,7 +333,7 @@ describe("onboard command", () => {
     });
 
     it("--check reports outdated for old version marker", async () => {
-      const oldContent = `${MARKER_START}\n## Project Expertise (Mulch)\n<!-- mulch-onboard-v:0 -->\nold\n${MARKER_END}`;
+      const oldContent = `${MARKER_START}\n## Project Expertise (Kura)\n<!-- kura-onboard-v:0 -->\nold\n${MARKER_END}`;
       await writeFile(join(tmpDir, "AGENTS.md"), oldContent, "utf-8");
 
       const consoleSpy = spyOn(console, "log").mockImplementation(() => {});
@@ -352,13 +352,13 @@ describe("onboard command", () => {
   // ── Legacy migration ──────────────────────────────────────
 
   describe("legacy migration", () => {
-    const LEGACY_SNIPPET = `## Project Expertise (Mulch)
+    const LEGACY_SNIPPET = `## Project Expertise (Kura)
 
-This project uses [Mulch](https://github.com/jayminwest/mulch) for structured expertise management.
+This project uses [Kura](https://github.com/jayminwest/kura) for structured expertise management.
 
 **At the start of every session**, run:
 \`\`\`bash
-mulch prime
+kura prime
 \`\`\`
 
 This injects project-specific conventions, patterns, decisions, and other learnings into your context.
@@ -366,21 +366,21 @@ This injects project-specific conventions, patterns, decisions, and other learni
 **Before completing your task**, review your work for insights worth preserving — conventions discovered,
 patterns applied, failures encountered, or decisions made — and record them:
 \`\`\`bash
-mulch record <domain> --type <convention|pattern|failure|decision|reference|guide> --description "..."
+kura record <domain> --type <convention|pattern|failure|decision|reference|guide> --description "..."
 \`\`\`
 
-Run \`mulch status\` to check domain health and entry counts.
-Run \`mulch --help\` for full usage.
+Run \`kura status\` to check domain health and entry counts.
+Run \`kura --help\` for full usage.
 
 ### Before You Finish
 
 1. Store insights from this work session:
    \`\`\`bash
-   mulch record <domain> --type <convention|pattern|failure|decision|reference|guide> --description "..."
+   kura record <domain> --type <convention|pattern|failure|decision|reference|guide> --description "..."
    \`\`\`
 2. Validate and commit:
    \`\`\`bash
-   mulch validate && git add .mulch/ && git commit -m "mulch: record learnings"
+   kura validate && git add .kura/ && git commit -m "kura: record learnings"
    \`\`\`
 `;
 
@@ -397,7 +397,7 @@ Run \`mulch --help\` for full usage.
         expect(content).toContain(MARKER_END);
         expect(content).toContain("# My Project");
         // Only one header
-        const headers = content.match(/## Project Expertise \(Mulch\)/g);
+        const headers = content.match(/## Project Expertise \(Kura\)/g);
         expect(headers).toHaveLength(1);
       } finally {
         consoleSpy.mockRestore();
@@ -424,7 +424,7 @@ Run \`mulch --help\` for full usage.
 
     it("handles edited legacy snippet (falls back to header-to-EOF)", async () => {
       const editedLegacy =
-        "# My Project\n\n## Project Expertise (Mulch)\n\nSome custom text the user wrote.\n";
+        "# My Project\n\n## Project Expertise (Kura)\n\nSome custom text the user wrote.\n";
       await writeFile(join(tmpDir, "CLAUDE.md"), editedLegacy, "utf-8");
 
       const consoleSpy = spyOn(console, "log").mockImplementation(() => {});
@@ -478,7 +478,7 @@ Run \`mulch --help\` for full usage.
           join(tmpDir, ".claude", "CLAUDE.md"),
           "utf-8",
         );
-        expect(content).toContain("mulch prime");
+        expect(content).toContain("kura prime");
         // Should NOT create root files
         expect(existsSync(join(tmpDir, "CLAUDE.md"))).toBe(false);
         expect(existsSync(join(tmpDir, "AGENTS.md"))).toBe(false);
@@ -503,7 +503,7 @@ Run \`mulch --help\` for full usage.
 
         // Root should be updated
         const rootContent = await readFile(join(tmpDir, "CLAUDE.md"), "utf-8");
-        expect(rootContent).toContain("mulch prime");
+        expect(rootContent).toContain("kura prime");
         // Should warn about duplicate
         expect(consoleSpy).toHaveBeenCalledWith(
           expect.stringContaining("also found in"),
@@ -528,12 +528,12 @@ Run \`mulch --help\` for full usage.
           join(tmpDir, "AGENTS.md"),
           "utf-8",
         );
-        expect(agentsContent).toContain("mulch prime");
+        expect(agentsContent).toContain("kura prime");
         const claudeContent = await readFile(
           join(tmpDir, "CLAUDE.md"),
           "utf-8",
         );
-        expect(claudeContent).not.toContain("mulch");
+        expect(claudeContent).not.toContain("kura");
       } finally {
         consoleSpy.mockRestore();
       }
@@ -543,7 +543,7 @@ Run \`mulch --help\` for full usage.
       await mkdir(join(tmpDir, ".claude"), { recursive: true });
       await writeFile(
         join(tmpDir, ".claude", "CLAUDE.md"),
-        "# Config\n\n## Project Expertise (Mulch)\n\nOld text.\n",
+        "# Config\n\n## Project Expertise (Kura)\n\nOld text.\n",
         "utf-8",
       );
 
@@ -556,7 +556,7 @@ Run \`mulch --help\` for full usage.
           "utf-8",
         );
         expect(content).toContain(MARKER_START);
-        expect(content).toContain("mulch prime");
+        expect(content).toContain("kura prime");
         expect(existsSync(join(tmpDir, "CLAUDE.md"))).toBe(false);
         expect(existsSync(join(tmpDir, "AGENTS.md"))).toBe(false);
       } finally {
@@ -619,7 +619,7 @@ Run \`mulch --help\` for full usage.
     it("reports legacy when snippet has no markers", async () => {
       await writeFile(
         join(tmpDir, "CLAUDE.md"),
-        "## Project Expertise (Mulch)\n\nOld text.\n",
+        "## Project Expertise (Kura)\n\nOld text.\n",
         "utf-8",
       );
 

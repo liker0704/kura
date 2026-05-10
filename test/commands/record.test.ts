@@ -14,7 +14,7 @@ import { recordSchema } from "../../src/schemas/record-schema.ts";
 import type { ExpertiseRecord } from "../../src/schemas/record.ts";
 import {
   getExpertisePath,
-  initMulchDir,
+  initKuraDir,
   writeConfig,
 } from "../../src/utils/config.ts";
 import {
@@ -27,8 +27,8 @@ describe("record command", () => {
   let tmpDir: string;
 
   beforeEach(async () => {
-    tmpDir = await mkdtemp(join(tmpdir(), "mulch-record-test-"));
-    await initMulchDir(tmpDir);
+    tmpDir = await mkdtemp(join(tmpdir(), "kura-record-test-"));
+    await initKuraDir(tmpDir);
     await writeConfig(
       { ...DEFAULT_CONFIG, domains: ["testing", "architecture"] },
       tmpDir,
@@ -272,7 +272,7 @@ describe("record command", () => {
     const record = {
       type: "reference",
       name: "config-file",
-      description: "YAML config at .mulch/mulch.config.yaml",
+      description: "YAML config at .kura/kura.config.yaml",
       files: ["src/utils/config.ts"],
       classification: "foundational",
       recorded_at: new Date().toISOString(),
@@ -288,7 +288,7 @@ describe("record command", () => {
     const record = {
       type: "guide",
       name: "add-domain",
-      description: "Run mulch add <name> to create a new domain",
+      description: "Run kura add <name> to create a new domain",
       classification: "tactical",
       recorded_at: new Date().toISOString(),
     };
@@ -905,8 +905,8 @@ describe("processStdinRecords", () => {
   let tmpDir: string;
 
   beforeEach(async () => {
-    tmpDir = await mkdtemp(join(tmpdir(), "mulch-stdin-test-"));
-    await initMulchDir(tmpDir);
+    tmpDir = await mkdtemp(join(tmpdir(), "kura-stdin-test-"));
+    await initKuraDir(tmpDir);
     await writeConfig(
       { ...DEFAULT_CONFIG, domains: ["testing", "architecture"] },
       tmpDir,
@@ -1409,8 +1409,8 @@ describe("batch mode (--batch)", () => {
   let tmpDir: string;
 
   beforeEach(async () => {
-    tmpDir = await mkdtemp(join(tmpdir(), "mulch-batch-test-"));
-    await initMulchDir(tmpDir);
+    tmpDir = await mkdtemp(join(tmpdir(), "kura-batch-test-"));
+    await initKuraDir(tmpDir);
     await writeConfig(
       { ...DEFAULT_CONFIG, domains: ["testing", "architecture"] },
       tmpDir,
@@ -1685,8 +1685,8 @@ describe("validation hints", () => {
   let tmpDir: string;
 
   beforeEach(async () => {
-    tmpDir = await mkdtemp(join(tmpdir(), "mulch-record-hints-"));
-    await initMulchDir(tmpDir);
+    tmpDir = await mkdtemp(join(tmpdir(), "kura-record-hints-"));
+    await initKuraDir(tmpDir);
     await writeConfig({ ...DEFAULT_CONFIG, domains: ["testing"] }, tmpDir);
     const filePath = getExpertisePath("testing", tmpDir);
     await createExpertiseFile(filePath);
@@ -1763,8 +1763,8 @@ describe("auto-create domain in CLI mode", () => {
   let tmpDir: string;
 
   beforeEach(async () => {
-    tmpDir = await mkdtemp(join(tmpdir(), "mulch-record-autocreate-"));
-    await initMulchDir(tmpDir);
+    tmpDir = await mkdtemp(join(tmpdir(), "kura-record-autocreate-"));
+    await initKuraDir(tmpDir);
     await writeConfig({ ...DEFAULT_CONFIG, domains: [] }, tmpDir);
   });
 
@@ -1873,7 +1873,7 @@ async function runRecord(
     program.option("--json", "output JSON");
     program.exitOverride();
     registerRecordCommand(program);
-    await program.parseAsync(["node", "mulch", "record", ...args]);
+    await program.parseAsync(["node", "kura", "record", ...args]);
   } catch {
     // ignore commander exitOverride
   } finally {
@@ -1897,8 +1897,8 @@ describe("record command -- new field flags", () => {
   let tmpDir: string;
 
   beforeEach(async () => {
-    tmpDir = await mkdtemp(join(tmpdir(), "mulch-record-flags-test-"));
-    await initMulchDir(tmpDir);
+    tmpDir = await mkdtemp(join(tmpdir(), "kura-record-flags-test-"));
+    await initKuraDir(tmpDir);
     await writeConfig({ ...DEFAULT_CONFIG, domains: ["testing"] }, tmpDir);
     const filePath = getExpertisePath("testing", tmpDir);
     await createExpertiseFile(filePath);

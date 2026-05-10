@@ -9,7 +9,7 @@ import { DEFAULT_CONFIG } from "../../src/schemas/config.ts";
 import {
   addDomain,
   getExpertisePath,
-  initMulchDir,
+  initKuraDir,
   readConfig,
   removeDomain,
   writeConfig,
@@ -37,7 +37,7 @@ async function runDeleteDomain(
     program.option("--json", "output JSON");
     program.exitOverride();
     registerDeleteDomainCommand(program);
-    await program.parseAsync(["node", "mulch", "delete-domain", ...args]);
+    await program.parseAsync(["node", "kura", "delete-domain", ...args]);
   } catch {
     // ignore
   } finally {
@@ -77,7 +77,7 @@ async function runDeleteDomainJson(
     registerDeleteDomainCommand(program);
     await program.parseAsync([
       "node",
-      "mulch",
+      "kura",
       "--json",
       "delete-domain",
       ...args,
@@ -105,8 +105,8 @@ describe("delete-domain command (removeDomain)", () => {
   let tmpDir: string;
 
   beforeEach(async () => {
-    tmpDir = await mkdtemp(join(tmpdir(), "mulch-delete-domain-test-"));
-    await initMulchDir(tmpDir);
+    tmpDir = await mkdtemp(join(tmpdir(), "kura-delete-domain-test-"));
+    await initKuraDir(tmpDir);
   });
 
   afterEach(async () => {
@@ -178,8 +178,8 @@ describe("delete-domain CLI", () => {
   let tmpDir: string;
 
   beforeEach(async () => {
-    tmpDir = await mkdtemp(join(tmpdir(), "mulch-delete-domain-cli-test-"));
-    await initMulchDir(tmpDir);
+    tmpDir = await mkdtemp(join(tmpdir(), "kura-delete-domain-cli-test-"));
+    await initKuraDir(tmpDir);
     await writeConfig({ ...DEFAULT_CONFIG, domains: ["testing"] }, tmpDir);
     const filePath = getExpertisePath("testing", tmpDir);
     await createExpertiseFile(filePath);

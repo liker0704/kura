@@ -10,7 +10,7 @@ import {
 import { dirname, join } from "node:path";
 import chalk from "chalk";
 import type { Command } from "commander";
-import { getMulchDir } from "../utils/config.ts";
+import { getKuraDir } from "../utils/config.ts";
 import { outputJson, outputJsonError } from "../utils/json-output.ts";
 import {
   MARKER_END,
@@ -45,15 +45,15 @@ interface RecipeResult {
 // Git hook helpers
 // ────────────────────────────────────────────────────────────
 
-const HOOK_MARKER_START = "# mulch:start";
-const HOOK_MARKER_END = "# mulch:end";
+const HOOK_MARKER_START = "# kura:start";
+const HOOK_MARKER_END = "# kura:end";
 
 const MULCH_HOOK_SECTION = `${HOOK_MARKER_START}
-# Run mulch validate before committing
-if command -v mulch >/dev/null 2>&1; then
-  mulch validate
+# Run kura validate before committing
+if command -v kura >/dev/null 2>&1; then
+  kura validate
   if [ $? -ne 0 ]; then
-    echo "mulch validate failed. Commit aborted."
+    echo "kura validate failed. Commit aborted."
     exit 1
   fi
 fi
@@ -93,7 +93,7 @@ async function installGitHook(cwd: string): Promise<RecipeResult> {
   await writeFile(hookPath, content, "utf-8");
   await chmod(hookPath, 0o755);
 
-  return { success: true, message: "Installed mulch pre-commit git hook." };
+  return { success: true, message: "Installed kura pre-commit git hook." };
 }
 
 async function checkGitHook(cwd: string): Promise<RecipeResult> {
@@ -106,7 +106,7 @@ async function checkGitHook(cwd: string): Promise<RecipeResult> {
   if (!content.includes(HOOK_MARKER_START)) {
     return {
       success: false,
-      message: "Git pre-commit hook exists but has no mulch section.",
+      message: "Git pre-commit hook exists but has no kura section.",
     };
   }
 
@@ -126,7 +126,7 @@ async function removeGitHook(cwd: string): Promise<RecipeResult> {
   if (!content.includes(HOOK_MARKER_START)) {
     return {
       success: true,
-      message: "No mulch section in pre-commit hook; nothing to remove.",
+      message: "No kura section in pre-commit hook; nothing to remove.",
     };
   }
 
@@ -141,14 +141,14 @@ async function removeGitHook(cwd: string): Promise<RecipeResult> {
     await unlink(hookPath);
     return {
       success: true,
-      message: "Removed mulch pre-commit hook (file deleted).",
+      message: "Removed kura pre-commit hook (file deleted).",
     };
   }
 
   await writeFile(hookPath, `${cleaned}\n`, "utf-8");
   return {
     success: true,
-    message: "Removed mulch section from pre-commit hook.",
+    message: "Removed kura section from pre-commit hook.",
   };
 }
 
@@ -184,7 +184,7 @@ interface ClaudeSettings {
   [key: string]: unknown;
 }
 
-const CLAUDE_HOOK_COMMAND = "mulch prime";
+const CLAUDE_HOOK_COMMAND = "kura prime";
 
 function claudeSettingsPath(cwd: string): string {
   return join(cwd, ".claude", "settings.json");
@@ -333,8 +333,8 @@ const claudeRecipe: ProviderRecipe = {
     return {
       success: true,
       message: removed
-        ? "Removed mulch hooks from Claude settings."
-        : "No mulch hooks found in Claude settings.",
+        ? "Removed kura hooks from Claude settings."
+        : "No kura hooks found in Claude settings.",
     };
   },
 };
@@ -342,31 +342,31 @@ const claudeRecipe: ProviderRecipe = {
 // ── Cursor ──────────────────────────────────────────────────
 
 function cursorRulePath(cwd: string): string {
-  return join(cwd, ".cursor", "rules", "mulch.mdc");
+  return join(cwd, ".cursor", "rules", "kura.mdc");
 }
 
 const CURSOR_RULE_CONTENT = `---
-description: Mulch expertise integration
+description: Kura expertise integration
 globs: *
 alwaysApply: true
 ---
 
-# Mulch Expertise
+# Kura Expertise
 
 At the start of every session, run the following command to load project expertise:
 
 \`\`\`
-mulch prime
+kura prime
 \`\`\`
 
 This injects project-specific conventions, patterns, decisions, and other learnings into your context.
-Use \`mulch prime --files src/foo.ts\` to load only records relevant to specific files.
+Use \`kura prime --files src/foo.ts\` to load only records relevant to specific files.
 
 **Before completing your task**, review your work for insights worth preserving — conventions discovered,
 patterns applied, failures encountered, or decisions made — and record them:
 
 \`\`\`
-mulch record <domain> --type <convention|pattern|failure|decision|reference|guide> [options]
+kura record <domain> --type <convention|pattern|failure|decision|reference|guide> [options]
 \`\`\`
 
 Link evidence: \`--evidence-commit <sha>\`, \`--evidence-bead <id>\`
@@ -374,9 +374,9 @@ Link evidence: \`--evidence-commit <sha>\`, \`--evidence-bead <id>\`
 **Before you finish**, run:
 
 \`\`\`
-mulch learn        # see what files changed — decide what to record
-mulch record ...   # record learnings
-mulch sync         # validate, stage, and commit .mulch/ changes
+kura learn        # see what files changed — decide what to record
+kura record ...   # record learnings
+kura sync         # validate, stage, and commit .kura/ changes
 \`\`\`
 `;
 
@@ -396,7 +396,7 @@ const cursorRecipe: ProviderRecipe = {
 
     return {
       success: true,
-      message: "Installed Cursor rule at .cursor/rules/mulch.mdc.",
+      message: "Installed Cursor rule at .cursor/rules/kura.mdc.",
     };
   },
 
@@ -435,18 +435,18 @@ function codexAgentsPath(cwd: string): string {
 }
 
 const CODEX_SECTION = `${MARKER_START}
-## Mulch Expertise
+## Kura Expertise
 
-At the start of every session, run \`mulch prime\` to load project expertise.
+At the start of every session, run \`kura prime\` to load project expertise.
 
 This injects project-specific conventions, patterns, decisions, and other learnings into your context.
-Use \`mulch prime --files src/foo.ts\` to load only records relevant to specific files.
+Use \`kura prime --files src/foo.ts\` to load only records relevant to specific files.
 
 **Before completing your task**, review your work for insights worth preserving — conventions discovered,
 patterns applied, failures encountered, or decisions made — and record them:
 
 \`\`\`
-mulch record <domain> --type <convention|pattern|failure|decision|reference|guide> [options]
+kura record <domain> --type <convention|pattern|failure|decision|reference|guide> [options]
 \`\`\`
 
 Link evidence: \`--evidence-commit <sha>\`, \`--evidence-bead <id>\`
@@ -454,9 +454,9 @@ Link evidence: \`--evidence-commit <sha>\`, \`--evidence-bead <id>\`
 **Before you finish**, run:
 
 \`\`\`
-mulch learn        # see what files changed — decide what to record
-mulch record ...   # record learnings
-mulch sync         # validate, stage, and commit .mulch/ changes
+kura learn        # see what files changed — decide what to record
+kura record ...   # record learnings
+kura sync         # validate, stage, and commit .kura/ changes
 \`\`\`
 ${MARKER_END}`;
 
@@ -470,7 +470,7 @@ const codexRecipe: ProviderRecipe = {
       if (hasMarkerSection(content)) {
         return {
           success: true,
-          message: "AGENTS.md already contains mulch section.",
+          message: "AGENTS.md already contains kura section.",
         };
       }
     }
@@ -481,7 +481,7 @@ const codexRecipe: ProviderRecipe = {
 
     await writeFile(agentsPath, newContent, "utf-8");
 
-    return { success: true, message: "Added mulch section to AGENTS.md." };
+    return { success: true, message: "Added kura section to AGENTS.md." };
   },
 
   async check(cwd) {
@@ -493,10 +493,10 @@ const codexRecipe: ProviderRecipe = {
     if (!hasMarkerSection(content)) {
       return {
         success: false,
-        message: "AGENTS.md exists but has no mulch section.",
+        message: "AGENTS.md exists but has no kura section.",
       };
     }
-    return { success: true, message: "AGENTS.md contains mulch section." };
+    return { success: true, message: "AGENTS.md contains kura section." };
   },
 
   async remove(cwd) {
@@ -511,12 +511,12 @@ const codexRecipe: ProviderRecipe = {
     if (!hasMarkerSection(content)) {
       return {
         success: true,
-        message: "No mulch section in AGENTS.md; nothing to remove.",
+        message: "No kura section in AGENTS.md; nothing to remove.",
       };
     }
     const cleaned = removeMarkerSection(content);
     await writeFile(agentsPath, cleaned, "utf-8");
-    return { success: true, message: "Removed mulch section from AGENTS.md." };
+    return { success: true, message: "Removed kura section from AGENTS.md." };
   },
 };
 
@@ -529,18 +529,18 @@ interface MarkdownRecipeConfig {
 
 function createMarkdownRecipe(config: MarkdownRecipeConfig): ProviderRecipe {
   const section = `${MARKER_START}
-## Mulch Expertise
+## Kura Expertise
 
-At the start of every session, run \`mulch prime\` to load project expertise.
+At the start of every session, run \`kura prime\` to load project expertise.
 
 This injects project-specific conventions, patterns, decisions, and other learnings into your context.
-Use \`mulch prime --files src/foo.ts\` to load only records relevant to specific files.
+Use \`kura prime --files src/foo.ts\` to load only records relevant to specific files.
 
 **Before completing your task**, review your work for insights worth preserving — conventions discovered,
 patterns applied, failures encountered, or decisions made — and record them:
 
 \`\`\`
-mulch record <domain> --type <convention|pattern|failure|decision|reference|guide> [options]
+kura record <domain> --type <convention|pattern|failure|decision|reference|guide> [options]
 \`\`\`
 
 Link evidence: \`--evidence-commit <sha>\`, \`--evidence-bead <id>\`
@@ -548,9 +548,9 @@ Link evidence: \`--evidence-commit <sha>\`, \`--evidence-bead <id>\`
 **Before you finish**, run:
 
 \`\`\`
-mulch learn        # see what files changed — decide what to record
-mulch record ...   # record learnings
-mulch sync         # validate, stage, and commit .mulch/ changes
+kura learn        # see what files changed — decide what to record
+kura record ...   # record learnings
+kura sync         # validate, stage, and commit .kura/ changes
 \`\`\`
 ${MARKER_END}`;
 
@@ -564,7 +564,7 @@ ${MARKER_END}`;
         if (hasMarkerSection(content)) {
           return {
             success: true,
-            message: `${config.fileName} already contains mulch section.`,
+            message: `${config.fileName} already contains kura section.`,
           };
         }
       }
@@ -578,7 +578,7 @@ ${MARKER_END}`;
 
       return {
         success: true,
-        message: `Added mulch section to ${config.fileName}.`,
+        message: `Added kura section to ${config.fileName}.`,
       };
     },
 
@@ -591,12 +591,12 @@ ${MARKER_END}`;
       if (!hasMarkerSection(content)) {
         return {
           success: false,
-          message: `${config.fileName} exists but has no mulch section.`,
+          message: `${config.fileName} exists but has no kura section.`,
         };
       }
       return {
         success: true,
-        message: `${config.fileName} contains mulch section.`,
+        message: `${config.fileName} contains kura section.`,
       };
     },
 
@@ -612,7 +612,7 @@ ${MARKER_END}`;
       if (!hasMarkerSection(content)) {
         return {
           success: true,
-          message: `No mulch section in ${config.fileName}; nothing to remove.`,
+          message: `No kura section in ${config.fileName}; nothing to remove.`,
         };
       }
 
@@ -620,7 +620,7 @@ ${MARKER_END}`;
       await writeFile(filePath, cleaned, "utf-8");
       return {
         success: true,
-        message: `Removed mulch section from ${config.fileName}.`,
+        message: `Removed kura section from ${config.fileName}.`,
       };
     },
   };
@@ -677,10 +677,10 @@ export function registerSetupCommand(program: Command): void {
       "[provider]",
       `agent provider (${SUPPORTED_PROVIDERS.join(", ")})`,
     )
-    .description("Set up mulch integration for a specific agent provider")
+    .description("Set up kura integration for a specific agent provider")
     .option("--check", "verify provider integration is installed")
     .option("--remove", "remove provider integration")
-    .option("--hooks", "install a pre-commit git hook running mulch validate")
+    .option("--hooks", "install a pre-commit git hook running kura validate")
     .action(
       async (
         provider: string | undefined,
@@ -688,18 +688,18 @@ export function registerSetupCommand(program: Command): void {
       ) => {
         const jsonMode = program.opts().json === true;
 
-        // Verify .mulch/ exists
-        const mulchDir = getMulchDir();
-        if (!existsSync(mulchDir)) {
+        // Verify .kura/ exists
+        const kuraDir = getKuraDir();
+        if (!existsSync(kuraDir)) {
           if (jsonMode) {
             outputJsonError(
               "setup",
-              "No .mulch/ directory found. Run `mulch init` first.",
+              "No .kura/ directory found. Run `kura init` first.",
             );
           } else {
             console.error(
               chalk.red(
-                "Error: No .mulch/ directory found. Run `mulch init` first.",
+                "Error: No .kura/ directory found. Run `kura init` first.",
               ),
             );
           }

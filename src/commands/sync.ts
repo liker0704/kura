@@ -22,7 +22,7 @@ function isGitRepo(cwd: string): boolean {
 
 function gitHasChanges(cwd: string): boolean {
   try {
-    const status = execFileSync("git", ["status", "--porcelain", ".mulch/"], {
+    const status = execFileSync("git", ["status", "--porcelain", ".kura/"], {
       cwd,
       encoding: "utf-8",
       stdio: ["pipe", "pipe", "pipe"],
@@ -34,7 +34,7 @@ function gitHasChanges(cwd: string): boolean {
 }
 
 function gitAdd(cwd: string): void {
-  execFileSync("git", ["add", ".mulch/"], { cwd, stdio: "pipe" });
+  execFileSync("git", ["add", ".kura/"], { cwd, stdio: "pipe" });
 }
 
 function gitCommit(cwd: string, message: string): string {
@@ -107,7 +107,7 @@ async function validateExpertise(cwd?: string): Promise<ValidateResult> {
 export function registerSyncCommand(program: Command): void {
   program
     .command("sync")
-    .description("Validate, stage, and commit .mulch/ changes")
+    .description("Validate, stage, and commit .kura/ changes")
     .option("--message <message>", "custom commit message")
     .option("--no-validate", "skip validation step")
     .action(async (options: { message?: string; validate?: boolean }) => {
@@ -189,13 +189,13 @@ export function registerSyncCommand(program: Command): void {
             message: "No changes to commit",
           });
         } else {
-          if (!isQuiet()) console.log("No .mulch/ changes to commit.");
+          if (!isQuiet()) console.log("No .kura/ changes to commit.");
         }
         return;
       }
 
       // Git add + commit
-      const commitMessage = options.message ?? "mulch: update expertise";
+      const commitMessage = options.message ?? "kura: update expertise";
       try {
         gitAdd(cwd);
         gitCommit(cwd, commitMessage);
@@ -211,7 +211,7 @@ export function registerSyncCommand(program: Command): void {
         } else {
           if (!isQuiet())
             console.log(
-              `${brand("✓")} ${brand(`Committed .mulch/ changes: "${commitMessage}"`)}`,
+              `${brand("✓")} ${brand(`Committed .kura/ changes: "${commitMessage}"`)}`,
             );
         }
       } catch (err) {

@@ -12,52 +12,52 @@ import {
 } from "../utils/markers.ts";
 
 export const ONBOARD_VERSION = 1;
-export const VERSION_MARKER = `<!-- mulch-onboard-v:${String(ONBOARD_VERSION)} -->`;
+export const VERSION_MARKER = `<!-- kura-onboard-v:${String(ONBOARD_VERSION)} -->`;
 
-const SNIPPET_DEFAULT = `## Project Expertise (Mulch)
+const SNIPPET_DEFAULT = `## Project Expertise (Kura)
 ${VERSION_MARKER}
 
-This project uses [Mulch](https://github.com/jayminwest/mulch) for structured expertise management.
+This project uses [Kura](https://github.com/jayminwest/kura) for structured expertise management.
 
 **At the start of every session**, run:
 \`\`\`bash
-mulch prime
+kura prime
 \`\`\`
 
 This injects project-specific conventions, patterns, decisions, and other learnings into your context.
-Use \`mulch prime --files src/foo.ts\` to load only records relevant to specific files.
+Use \`kura prime --files src/foo.ts\` to load only records relevant to specific files.
 
 **Before completing your task**, review your work for insights worth preserving — conventions discovered,
 patterns applied, failures encountered, or decisions made — and record them:
 \`\`\`bash
-mulch record <domain> --type <convention|pattern|failure|decision|reference|guide> --description "..."
+kura record <domain> --type <convention|pattern|failure|decision|reference|guide> --description "..."
 \`\`\`
 
 Link evidence when available: \`--evidence-commit <sha>\`, \`--evidence-bead <id>\`
 
-Run \`mulch status\` to check domain health and entry counts.
-Run \`mulch --help\` for full usage.
-Mulch write commands use file locking and atomic writes — multiple agents can safely record to the same domain concurrently.
+Run \`kura status\` to check domain health and entry counts.
+Run \`kura --help\` for full usage.
+Kura write commands use file locking and atomic writes — multiple agents can safely record to the same domain concurrently.
 
 ### Before You Finish
 
 1. Discover what to record:
    \`\`\`bash
-   mulch learn
+   kura learn
    \`\`\`
 2. Store insights from this work session:
    \`\`\`bash
-   mulch record <domain> --type <convention|pattern|failure|decision|reference|guide> --description "..."
+   kura record <domain> --type <convention|pattern|failure|decision|reference|guide> --description "..."
    \`\`\`
 3. Validate and commit:
    \`\`\`bash
-   mulch sync
+   kura sync
    \`\`\`
 `;
 
-const LEGACY_HEADER = "## Project Expertise (Mulch)";
+const LEGACY_HEADER = "## Project Expertise (Kura)";
 const LEGACY_TAIL =
-  'mulch validate && git add .mulch/ && git commit -m "mulch: record learnings"';
+  'kura validate && git add .kura/ && git commit -m "kura: record learnings"';
 
 function getSnippet(provider: string | undefined): string {
   if (!provider || provider === "default") {
@@ -232,10 +232,10 @@ export async function runOnboard(options: {
       });
     } else {
       const messages: Record<string, string> = {
-        not_installed: `Mulch snippet is not installed in ${target.fileName}.`,
-        up_to_date: `Mulch snippet in ${target.fileName} is up to date.`,
-        outdated: `Mulch snippet in ${target.fileName} is outdated. Run \`mulch onboard\` to update.`,
-        legacy: `Mulch snippet in ${target.fileName} uses legacy format (no markers). Run \`mulch onboard\` to migrate.`,
+        not_installed: `Kura snippet is not installed in ${target.fileName}.`,
+        up_to_date: `Kura snippet in ${target.fileName} is up to date.`,
+        outdated: `Kura snippet in ${target.fileName} is outdated. Run \`kura onboard\` to update.`,
+        legacy: `Kura snippet in ${target.fileName} uses legacy format (no markers). Run \`kura onboard\` to migrate.`,
       };
       const colors: Record<string, (s: string) => string> = {
         not_installed: chalk.yellow,
@@ -250,7 +250,7 @@ export async function runOnboard(options: {
       const names = duplicates.map((d) => d.fileName).join(", ");
       if (!options.jsonMode) {
         console.log(
-          chalk.yellow(`Warning: mulch snippet also found in: ${names}`),
+          chalk.yellow(`Warning: kura snippet also found in: ${names}`),
         );
       }
     }
@@ -305,11 +305,11 @@ export async function runOnboard(options: {
     });
   } else {
     const messages: Record<string, string> = {
-      created: `Mulch onboarding snippet written to ${target.fileName}.`,
-      appended: `Mulch onboarding snippet appended to ${target.fileName}.`,
-      updated: `Mulch onboarding snippet updated in ${target.fileName}.`,
-      migrated: `Mulch onboarding snippet migrated to marker format in ${target.fileName}.`,
-      up_to_date: `Mulch snippet in ${target.fileName} is already up to date. No changes made.`,
+      created: `Kura onboarding snippet written to ${target.fileName}.`,
+      appended: `Kura onboarding snippet appended to ${target.fileName}.`,
+      updated: `Kura onboarding snippet updated in ${target.fileName}.`,
+      migrated: `Kura onboarding snippet migrated to marker format in ${target.fileName}.`,
+      up_to_date: `Kura snippet in ${target.fileName} is already up to date. No changes made.`,
     };
     const color = action === "up_to_date" ? chalk.yellow : chalk.green;
     console.log(color(messages[action]));
@@ -319,7 +319,7 @@ export async function runOnboard(options: {
     const names = duplicates.map((d) => d.fileName).join(", ");
     if (!options.jsonMode) {
       console.log(
-        chalk.yellow(`Warning: mulch snippet also found in: ${names}`),
+        chalk.yellow(`Warning: kura snippet also found in: ${names}`),
       );
     }
   }
@@ -329,7 +329,7 @@ export function registerOnboardCommand(program: Command): void {
   program
     .command("onboard")
     .description(
-      "Generate or update an AGENTS.md/CLAUDE.md snippet pointing to mulch prime",
+      "Generate or update an AGENTS.md/CLAUDE.md snippet pointing to kura prime",
     )
     .option("--stdout", "print snippet to stdout instead of writing to file")
     .option(

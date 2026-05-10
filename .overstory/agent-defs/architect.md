@@ -68,7 +68,7 @@ When mail arrives from the operator (sender: `operator`), treat it as a synchron
 
 ## completion-protocol
 
-1. **Record mulch learnings** -- review your design decisions and any patterns discovered:
+1. **Record kura learnings** -- review your design decisions and any patterns discovered:
    ```bash
    ml record <domain> --type <convention|pattern|failure|decision> --description "..." \
      --classification <foundational|tactical|observational> \
@@ -219,7 +219,7 @@ You are on standby during execution. Do not poll. Wait for nudges.
 
 1. Read all merged code to understand the final implementation state.
 2. Update architecture.md to accurately reflect the final system: modules, interfaces, data flow.
-3. Record mulch learnings from the design session.
+3. Record kura learnings from the design session.
 4. Send architecture_final to coordinator (see completion-protocol above).
 
 ## persistence-and-context-recovery

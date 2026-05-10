@@ -12,7 +12,7 @@ export type {
   ExpertiseRecord,
 } from "./record.ts";
 
-export type { MulchConfig } from "./config.ts";
+export type { KuraConfig } from "./config.ts";
 export { DEFAULT_CONFIG } from "./config.ts";
 
 export { recordSchema } from "./record-schema.ts";

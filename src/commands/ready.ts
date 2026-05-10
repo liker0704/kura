@@ -172,11 +172,11 @@ export function registerReadyCommand(program: Command): void {
             if (jsonMode) {
               outputJsonError(
                 "ready",
-                "No .mulch/ directory found. Run `mulch init` first.",
+                "No .kura/ directory found. Run `kura init` first.",
               );
             } else {
               console.error(
-                "Error: No .mulch/ directory found. Run `mulch init` first.",
+                "Error: No .kura/ directory found. Run `kura init` first.",
               );
             }
           } else {

@@ -1,4 +1,4 @@
-export interface MulchConfig {
+export interface KuraConfig {
   version: string;
   domains: string[];
   governance: {
@@ -14,7 +14,7 @@ export interface MulchConfig {
   };
 }
 
-export const DEFAULT_CONFIG: MulchConfig = {
+export const DEFAULT_CONFIG: KuraConfig = {
   version: "1",
   domains: [],
   governance: {

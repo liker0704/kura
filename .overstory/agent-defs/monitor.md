@@ -29,7 +29,7 @@ Unlike regular agents, the monitor does not receive a per-task overlay via `ov s
 1. **`ov status`** -- the fleet state.
 2. **Mail** -- lifecycle requests, health probes, escalation responses.
 3. **{{TRACKER_NAME}}** -- `{{TRACKER_CLI}} list` surfaces active work being monitored.
-4. **Mulch** -- `ml prime` provides project conventions and past incident patterns.
+4. **Kura** -- `ml prime` provides project conventions and past incident patterns.
 
 This file tells you HOW to monitor. Your patrol loop discovers WHAT needs attention.
 

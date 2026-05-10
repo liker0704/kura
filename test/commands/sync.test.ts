@@ -8,7 +8,7 @@ import { registerSyncCommand } from "../../src/commands/sync.ts";
 import { DEFAULT_CONFIG } from "../../src/schemas/config.ts";
 import {
   getExpertisePath,
-  initMulchDir,
+  initKuraDir,
   writeConfig,
 } from "../../src/utils/config.ts";
 import {
@@ -19,7 +19,7 @@ import {
 function makeProgram(): Command {
   const program = new Command();
   program
-    .name("mulch")
+    .name("kura")
     .option("--json", "output as structured JSON")
     .exitOverride();
   registerSyncCommand(program);
@@ -49,7 +49,7 @@ function getGitLog(dir: string): string {
 }
 
 function isGitClean(dir: string): boolean {
-  const status = execSync("git status --porcelain .mulch/", {
+  const status = execSync("git status --porcelain .kura/", {
     cwd: dir,
     encoding: "utf-8",
     stdio: ["pipe", "pipe", "pipe"],
@@ -63,8 +63,8 @@ describe("sync command", () => {
 
   beforeEach(async () => {
     originalCwd = process.cwd();
-    tmpDir = await mkdtemp(join(tmpdir(), "mulch-sync-test-"));
-    await initMulchDir(tmpDir);
+    tmpDir = await mkdtemp(join(tmpdir(), "kura-sync-test-"));
+    await initKuraDir(tmpDir);
     await writeConfig({ ...DEFAULT_CONFIG, domains: ["testing"] }, tmpDir);
     const expertisePath = getExpertisePath("testing", tmpDir);
     await createExpertiseFile(expertisePath);
@@ -79,20 +79,20 @@ describe("sync command", () => {
     await rm(tmpDir, { recursive: true, force: true });
   });
 
-  it("reports no changes when .mulch/ is clean", async () => {
+  it("reports no changes when .kura/ is clean", async () => {
     const logSpy = spyOn(console, "log").mockImplementation(() => {});
     try {
       const program = makeProgram();
-      await program.parseAsync(["node", "mulch", "sync"]);
+      await program.parseAsync(["node", "kura", "sync"]);
       expect(process.exitCode).toBeFalsy();
       const allLogs = logSpy.mock.calls.map((c) => c.join(" ")).join("\n");
-      expect(allLogs).toContain("No .mulch/ changes to commit");
+      expect(allLogs).toContain("No .kura/ changes to commit");
     } finally {
       logSpy.mockRestore();
     }
   });
 
-  it("validates, stages, and commits .mulch/ changes", async () => {
+  it("validates, stages, and commits .kura/ changes", async () => {
     await appendRecord(getExpertisePath("testing", tmpDir), {
       type: "convention",
       content: "Use real filesystems in tests",
@@ -103,11 +103,11 @@ describe("sync command", () => {
     const logSpy = spyOn(console, "log").mockImplementation(() => {});
     try {
       const program = makeProgram();
-      await program.parseAsync(["node", "mulch", "sync"]);
+      await program.parseAsync(["node", "kura", "sync"]);
       expect(process.exitCode).toBeFalsy();
       expect(isGitClean(tmpDir)).toBe(true);
       const log = getGitLog(tmpDir);
-      expect(log).toContain("mulch: update expertise");
+      expect(log).toContain("kura: update expertise");
     } finally {
       logSpy.mockRestore();
     }
@@ -126,7 +126,7 @@ describe("sync command", () => {
       const program = makeProgram();
       await program.parseAsync([
         "node",
-        "mulch",
+        "kura",
         "sync",
         "--message",
         "chore: record session insights",
@@ -150,14 +150,14 @@ describe("sync command", () => {
     const logSpy = spyOn(console, "log").mockImplementation(() => {});
     try {
       const program1 = makeProgram();
-      await program1.parseAsync(["node", "mulch", "sync"]);
+      await program1.parseAsync(["node", "kura", "sync"]);
       expect(process.exitCode).toBeFalsy();
 
       const program2 = makeProgram();
-      await program2.parseAsync(["node", "mulch", "sync"]);
+      await program2.parseAsync(["node", "kura", "sync"]);
       expect(process.exitCode).toBeFalsy();
       const allLogs = logSpy.mock.calls.map((c) => c.join(" ")).join("\n");
-      expect(allLogs).toContain("No .mulch/ changes to commit");
+      expect(allLogs).toContain("No .kura/ changes to commit");
     } finally {
       logSpy.mockRestore();
     }
@@ -170,7 +170,7 @@ describe("sync command", () => {
     const logSpy = spyOn(console, "log").mockImplementation(() => {});
     try {
       const program = makeProgram();
-      await program.parseAsync(["node", "mulch", "sync", "--no-validate"]);
+      await program.parseAsync(["node", "kura", "sync", "--no-validate"]);
       expect(process.exitCode).toBeFalsy();
       expect(isGitClean(tmpDir)).toBe(true);
     } finally {
@@ -186,7 +186,7 @@ describe("sync command", () => {
     const logSpy = spyOn(console, "log").mockImplementation(() => {});
     try {
       const program = makeProgram();
-      await program.parseAsync(["node", "mulch", "sync"]);
+      await program.parseAsync(["node", "kura", "sync"]);
       expect(process.exitCode).toBe(1);
       const allErrors = errorSpy.mock.calls.map((c) => c.join(" ")).join("\n");
       expect(allErrors).toContain("Validation failed");
@@ -208,7 +208,7 @@ describe("sync command", () => {
     const logSpy = spyOn(console, "log").mockImplementation(() => {});
     try {
       const program = makeProgram();
-      await program.parseAsync(["node", "mulch", "sync"]);
+      await program.parseAsync(["node", "kura", "sync"]);
       expect(process.exitCode).toBe(1);
       const allErrors = errorSpy.mock.calls.map((c) => c.join(" ")).join("\n");
       expect(allErrors).toContain("Validation failed");
@@ -222,8 +222,8 @@ describe("sync command", () => {
     let nonGitDir: string;
 
     beforeEach(async () => {
-      nonGitDir = await mkdtemp(join(tmpdir(), "mulch-sync-nogit-"));
-      await initMulchDir(nonGitDir);
+      nonGitDir = await mkdtemp(join(tmpdir(), "kura-sync-nogit-"));
+      await initKuraDir(nonGitDir);
       process.chdir(nonGitDir);
     });
 
@@ -235,7 +235,7 @@ describe("sync command", () => {
       const errorSpy = spyOn(console, "error").mockImplementation(() => {});
       try {
         const program = makeProgram();
-        await program.parseAsync(["node", "mulch", "sync"]);
+        await program.parseAsync(["node", "kura", "sync"]);
         expect(process.exitCode).toBe(1);
         const allErrors = errorSpy.mock.calls
           .map((c) => c.join(" "))
@@ -252,7 +252,7 @@ describe("sync command", () => {
       const logSpy = spyOn(console, "log").mockImplementation(() => {});
       try {
         const program = makeProgram();
-        await program.parseAsync(["node", "mulch", "--json", "sync"]);
+        await program.parseAsync(["node", "kura", "--json", "sync"]);
         expect(process.exitCode).toBeFalsy();
         const output = logSpy.mock.calls.map((c) => c.join(" ")).join("\n");
         const parsed = JSON.parse(output);
@@ -275,28 +275,28 @@ describe("sync command", () => {
       const logSpy = spyOn(console, "log").mockImplementation(() => {});
       try {
         const program = makeProgram();
-        await program.parseAsync(["node", "mulch", "--json", "sync"]);
+        await program.parseAsync(["node", "kura", "--json", "sync"]);
         expect(process.exitCode).toBeFalsy();
         const output = logSpy.mock.calls.map((c) => c.join(" ")).join("\n");
         const parsed = JSON.parse(output);
         expect(parsed.success).toBe(true);
         expect(parsed.committed).toBe(true);
         expect(parsed.validated).toBe(true);
-        expect(parsed.message).toBe("mulch: update expertise");
+        expect(parsed.message).toBe("kura: update expertise");
       } finally {
         logSpy.mockRestore();
       }
     });
 
     it("returns error JSON when not in a git repo", async () => {
-      const nonGitDir = await mkdtemp(join(tmpdir(), "mulch-sync-json-nogit-"));
+      const nonGitDir = await mkdtemp(join(tmpdir(), "kura-sync-json-nogit-"));
       try {
-        await initMulchDir(nonGitDir);
+        await initKuraDir(nonGitDir);
         process.chdir(nonGitDir);
         const errorSpy = spyOn(console, "error").mockImplementation(() => {});
         try {
           const program = makeProgram();
-          await program.parseAsync(["node", "mulch", "--json", "sync"]);
+          await program.parseAsync(["node", "kura", "--json", "sync"]);
           expect(process.exitCode).toBe(1);
           const output = errorSpy.mock.calls.map((c) => c.join(" ")).join("\n");
           const parsed = JSON.parse(output);
@@ -318,7 +318,7 @@ describe("sync command", () => {
       const logSpy = spyOn(console, "log").mockImplementation(() => {});
       try {
         const program = makeProgram();
-        await program.parseAsync(["node", "mulch", "--json", "sync"]);
+        await program.parseAsync(["node", "kura", "--json", "sync"]);
         expect(process.exitCode).toBe(1);
         const output = logSpy.mock.calls.map((c) => c.join(" ")).join("\n");
         const parsed = JSON.parse(output);
@@ -344,7 +344,7 @@ describe("sync command", () => {
         const program = makeProgram();
         await program.parseAsync([
           "node",
-          "mulch",
+          "kura",
           "--json",
           "sync",
           "--no-validate",

@@ -32,7 +32,7 @@ describe("expertise utils", () => {
   let tmpDir: string;
 
   beforeEach(async () => {
-    tmpDir = await mkdtemp(join(tmpdir(), "mulch-test-"));
+    tmpDir = await mkdtemp(join(tmpdir(), "kura-test-"));
   });
 
   afterEach(async () => {

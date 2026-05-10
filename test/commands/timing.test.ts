@@ -25,7 +25,7 @@ describe("--timing flag", () => {
     const stdout = result.stdout.toString();
     expect(stdout).not.toContain("Done in");
     // stdout should still contain actual command output
-    expect(stdout).toContain("mulch");
+    expect(stdout).toContain("kura");
   });
 
   it("does not print timing without --timing flag", () => {

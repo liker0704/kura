@@ -30,7 +30,7 @@
       "*.jsonl",
       ".overstory/",
       ".seeds/",
-      ".mulch/",
+      ".kura/",
       ".entire/",
       ".claude/"
     ]

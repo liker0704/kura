@@ -11,7 +11,7 @@ import type {
   Evidence,
   ExpertiseRecord,
   FailureRecord,
-  MulchConfig,
+  KuraConfig,
   PatternRecord,
   RecordType,
 } from "../src/index.ts";
@@ -33,7 +33,7 @@ describe("src/index.ts exports", () => {
   let tmpDir: string;
 
   beforeEach(async () => {
-    tmpDir = await mkdtemp(join(tmpdir(), "mulch-index-test-"));
+    tmpDir = await mkdtemp(join(tmpdir(), "kura-index-test-"));
   });
 
   afterEach(async () => {
@@ -113,8 +113,8 @@ describe("src/index.ts exports", () => {
       expect(record.type).toBe("convention");
     });
 
-    it("exports MulchConfig type", () => {
-      const config: MulchConfig = {
+    it("exports KuraConfig type", () => {
+      const config: KuraConfig = {
         version: "1",
         domains: ["test"],
         governance: {
@@ -145,10 +145,10 @@ describe("src/index.ts exports", () => {
     it("exports and uses readConfig", async () => {
       // Create a minimal config file
       const { mkdir } = await import("node:fs/promises");
-      const configDir = join(tmpDir, ".mulch");
+      const configDir = join(tmpDir, ".kura");
       await mkdir(configDir, { recursive: true });
 
-      const configPath = join(configDir, "mulch.config.yaml");
+      const configPath = join(configDir, "kura.config.yaml");
       const configContent = `version: "1"
 domains: []
 governance:
@@ -165,7 +165,7 @@ governance:
 
     it("exports and uses getExpertisePath", () => {
       const path = getExpertisePath("testing", tmpDir);
-      expect(path).toBe(join(tmpDir, ".mulch", "expertise", "testing.jsonl"));
+      expect(path).toBe(join(tmpDir, ".kura", "expertise", "testing.jsonl"));
     });
   });
 
@@ -297,7 +297,7 @@ governance:
       const filePath = getExpertisePath(domain, tmpDir);
 
       // Ensure directory exists
-      const expertiseDir = join(tmpDir, ".mulch", "expertise");
+      const expertiseDir = join(tmpDir, ".kura", "expertise");
       await mkdir(expertiseDir, { recursive: true });
 
       // Create initial record

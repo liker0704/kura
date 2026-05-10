@@ -66,7 +66,7 @@ export function registerValidateCommand(program: Command): void {
           ) {
             totalWarnings++;
             const msg =
-              'Legacy "outcome" field (singular); run `mulch doctor --fix` to migrate to "outcomes[]"';
+              'Legacy "outcome" field (singular); run `kura doctor --fix` to migrate to "outcomes[]"';
             warnings.push({ domain, line: lineNumber, message: msg });
             if (!jsonMode) {
               console.error(chalk.yellow(`${domain}:${lineNumber} - ${msg}`));

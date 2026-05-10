@@ -1,7 +1,7 @@
 import { existsSync } from "node:fs";
 import chalk from "chalk";
 import type { Command } from "commander";
-import { getExpertisePath, getMulchDir, readConfig } from "../utils/config.ts";
+import { getExpertisePath, getKuraDir, readConfig } from "../utils/config.ts";
 import { readExpertiseFile } from "../utils/expertise.ts";
 import { getChangedFiles, isGitRepo } from "../utils/git.ts";
 import { outputJson, outputJsonError } from "../utils/json-output.ts";
@@ -88,8 +88,8 @@ export function registerLearnCommand(program: Command): void {
         return;
       }
 
-      // No .mulch/ directory — exit cleanly (supports hook usage in non-mulch projects)
-      if (!existsSync(getMulchDir(cwd))) {
+      // No .kura/ directory — exit cleanly (supports hook usage in non-kura projects)
+      if (!existsSync(getKuraDir(cwd))) {
         if (jsonMode) {
           outputJson({
             success: true,
@@ -97,7 +97,7 @@ export function registerLearnCommand(program: Command): void {
             changedFiles: [],
             suggestedDomains: [],
             unmatchedFiles: [],
-            message: "No .mulch/ directory found — skipping",
+            message: "No .kura/ directory found — skipping",
           });
         }
         return;
@@ -169,9 +169,7 @@ export function registerLearnCommand(program: Command): void {
 
         console.log(chalk.dim("\nRecord learnings with:"));
         console.log(
-          chalk.dim(
-            '  mulch record <domain> --type <type> --description "..."',
-          ),
+          chalk.dim('  kura record <domain> --type <type> --description "..."'),
         );
         console.log();
       } catch (err) {

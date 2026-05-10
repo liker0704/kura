@@ -61,7 +61,7 @@ export function registerQueryCommand(program: Command): void {
                 outputJson({ success: true, command: "query", domains: [] });
               } else {
                 console.log(
-                  "No domains configured. Run `mulch add <domain>` to get started.",
+                  "No domains configured. Run `kura add <domain>` to get started.",
                 );
               }
               return;
@@ -78,7 +78,7 @@ export function registerQueryCommand(program: Command): void {
                   `Error: Domain "${domain}" not found in config. Available domains: ${config.domains.join(", ") || "(none)"}`,
                 );
                 console.error(
-                  `Hint: Run \`mulch add ${domain}\` to create this domain, or check .mulch/mulch.config.yaml`,
+                  `Hint: Run \`kura add ${domain}\` to create this domain, or check .kura/kura.config.yaml`,
                 );
               }
               process.exitCode = 1;
@@ -210,11 +210,11 @@ export function registerQueryCommand(program: Command): void {
             if (jsonMode) {
               outputJsonError(
                 "query",
-                "No .mulch/ directory found. Run `mulch init` first.",
+                "No .kura/ directory found. Run `kura init` first.",
               );
             } else {
               console.error(
-                "Error: No .mulch/ directory found. Run `mulch init` first.",
+                "Error: No .kura/ directory found. Run `kura init` first.",
               );
             }
           } else {

@@ -6,7 +6,7 @@ import { DEFAULT_CONFIG } from "../../src/schemas/config.ts";
 import type { ExpertiseRecord } from "../../src/schemas/record.ts";
 import {
   getExpertisePath,
-  initMulchDir,
+  initKuraDir,
   writeConfig,
 } from "../../src/utils/config.ts";
 import {
@@ -21,8 +21,8 @@ import {
 let tmpDir: string;
 
 beforeEach(async () => {
-  tmpDir = await mkdtemp(join(tmpdir(), "mulch-id-test-"));
-  await initMulchDir(tmpDir);
+  tmpDir = await mkdtemp(join(tmpdir(), "kura-id-test-"));
+  await initKuraDir(tmpDir);
   await writeConfig({ ...DEFAULT_CONFIG, domains: ["testing"] }, tmpDir);
 });
 

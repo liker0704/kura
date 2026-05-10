@@ -47,7 +47,7 @@ export function registerDeleteDomainCommand(program: Command): void {
               );
               console.error(
                 chalk.red(
-                  `Hint: Run \`mulch add ${domain}\` to create it, or check \`mulch status\` for existing domains.`,
+                  `Hint: Run \`kura add ${domain}\` to create it, or check \`kura status\` for existing domains.`,
                 ),
               );
             }
@@ -113,12 +113,12 @@ export function registerDeleteDomainCommand(program: Command): void {
             if (jsonMode) {
               outputJsonError(
                 "delete-domain",
-                "No .mulch/ directory found. Run `mulch init` first.",
+                "No .kura/ directory found. Run `kura init` first.",
               );
             } else {
               console.error(
                 chalk.red(
-                  "Error: No .mulch/ directory found. Run `mulch init` first.",
+                  "Error: No .kura/ directory found. Run `kura init` first.",
                 ),
               );
             }

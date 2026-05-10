@@ -6,7 +6,7 @@ import { DEFAULT_CONFIG } from "../../src/schemas/config.ts";
 import type { ExpertiseRecord } from "../../src/schemas/record.ts";
 import {
   getExpertisePath,
-  initMulchDir,
+  initKuraDir,
   writeConfig,
 } from "../../src/utils/config.ts";
 import {
@@ -31,8 +31,8 @@ function daysAgo(days: number): string {
 }
 
 beforeEach(async () => {
-  tmpDir = await mkdtemp(join(tmpdir(), "mulch-ready-test-"));
-  await initMulchDir(tmpDir);
+  tmpDir = await mkdtemp(join(tmpdir(), "kura-ready-test-"));
+  await initKuraDir(tmpDir);
   await writeConfig({ ...DEFAULT_CONFIG, domains: ["testing", "api"] }, tmpDir);
 });
 

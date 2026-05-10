@@ -5,11 +5,11 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import {
   GITATTRIBUTES_LINE,
-  MULCH_README,
+  KURA_README,
   getConfigPath,
   getExpertiseDir,
-  getMulchDir,
-  initMulchDir,
+  getKuraDir,
+  initKuraDir,
   readConfig,
   writeConfig,
 } from "../../src/utils/config.ts";
@@ -18,23 +18,23 @@ describe("init command", () => {
   let tmpDir: string;
 
   beforeEach(async () => {
-    tmpDir = await mkdtemp(join(tmpdir(), "mulch-init-test-"));
+    tmpDir = await mkdtemp(join(tmpdir(), "kura-init-test-"));
   });
 
   afterEach(async () => {
     await rm(tmpDir, { recursive: true, force: true });
   });
 
-  it("creates .mulch/ with config and expertise/", async () => {
-    await initMulchDir(tmpDir);
+  it("creates .kura/ with config and expertise/", async () => {
+    await initKuraDir(tmpDir);
 
-    expect(existsSync(getMulchDir(tmpDir))).toBe(true);
+    expect(existsSync(getKuraDir(tmpDir))).toBe(true);
     expect(existsSync(getConfigPath(tmpDir))).toBe(true);
     expect(existsSync(getExpertiseDir(tmpDir))).toBe(true);
   });
 
   it("creates a valid default config", async () => {
-    await initMulchDir(tmpDir);
+    await initKuraDir(tmpDir);
 
     const config = await readConfig(tmpDir);
     expect(config.version).toBe("1");
@@ -45,10 +45,10 @@ describe("init command", () => {
   });
 
   it("running init twice does not error", async () => {
-    await initMulchDir(tmpDir);
+    await initKuraDir(tmpDir);
 
     // Second init should succeed without throwing
-    await expect(initMulchDir(tmpDir)).resolves.toBeUndefined();
+    await expect(initKuraDir(tmpDir)).resolves.toBeUndefined();
 
     // Config should still be valid after second init
     const config = await readConfig(tmpDir);
@@ -56,7 +56,7 @@ describe("init command", () => {
   });
 
   it("re-running init preserves customized config", async () => {
-    await initMulchDir(tmpDir);
+    await initKuraDir(tmpDir);
 
     // Customize the config
     const config = await readConfig(tmpDir);
@@ -65,7 +65,7 @@ describe("init command", () => {
     await writeConfig(config, tmpDir);
 
     // Re-run init
-    await initMulchDir(tmpDir);
+    await initKuraDir(tmpDir);
 
     // Config should retain customizations
     const after = await readConfig(tmpDir);
@@ -73,13 +73,13 @@ describe("init command", () => {
     expect(after.governance.max_entries).toBe(50);
   });
 
-  it("checks that .mulch/ already exists", () => {
+  it("checks that .kura/ already exists", () => {
     // Before init, directory should not exist
-    expect(existsSync(getMulchDir(tmpDir))).toBe(false);
+    expect(existsSync(getKuraDir(tmpDir))).toBe(false);
   });
 
   it("creates .gitattributes with merge=union for JSONL files", async () => {
-    await initMulchDir(tmpDir);
+    await initKuraDir(tmpDir);
 
     const content = await readFile(join(tmpDir, ".gitattributes"), "utf-8");
     expect(content).toContain(GITATTRIBUTES_LINE);
@@ -89,7 +89,7 @@ describe("init command", () => {
     const existing = "*.png binary\n";
     await writeFile(join(tmpDir, ".gitattributes"), existing, "utf-8");
 
-    await initMulchDir(tmpDir);
+    await initKuraDir(tmpDir);
 
     const content = await readFile(join(tmpDir, ".gitattributes"), "utf-8");
     expect(content).toContain("*.png binary");
@@ -97,31 +97,31 @@ describe("init command", () => {
   });
 
   it("does not duplicate gitattributes line on second init", async () => {
-    await initMulchDir(tmpDir);
-    await initMulchDir(tmpDir);
+    await initKuraDir(tmpDir);
+    await initKuraDir(tmpDir);
 
     const content = await readFile(join(tmpDir, ".gitattributes"), "utf-8");
     const occurrences = content.split(GITATTRIBUTES_LINE).length - 1;
     expect(occurrences).toBe(1);
   });
 
-  it("creates .mulch/README.md", async () => {
-    await initMulchDir(tmpDir);
+  it("creates .kura/README.md", async () => {
+    await initKuraDir(tmpDir);
 
-    const readmePath = join(getMulchDir(tmpDir), "README.md");
+    const readmePath = join(getKuraDir(tmpDir), "README.md");
     expect(existsSync(readmePath)).toBe(true);
   });
 
   it("README.md contains repo URL and key commands", async () => {
-    await initMulchDir(tmpDir);
+    await initKuraDir(tmpDir);
 
     const content = await readFile(
-      join(getMulchDir(tmpDir), "README.md"),
+      join(getKuraDir(tmpDir), "README.md"),
       "utf-8",
     );
-    expect(content).toContain("https://github.com/jayminwest/mulch");
-    expect(content).toContain("mulch record");
-    expect(content).toContain("mulch query");
-    expect(content).toContain("mulch prime");
+    expect(content).toContain("https://github.com/jayminwest/kura");
+    expect(content).toContain("kura record");
+    expect(content).toContain("kura query");
+    expect(content).toContain("kura prime");
   });
 });
